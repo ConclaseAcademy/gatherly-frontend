@@ -2,7 +2,7 @@ name: Deploy Frontend to Azure VM
 
 on:
   push:
-    branches: [ "main", ] # Triggers the pipeline when pushing to main branch
+    branches: [ "main", "develop" ] # Triggers the pipeline when pushing to main, develop branch
 
 jobs:
   build-and-deploy:
