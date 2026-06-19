@@ -1,0 +1,18 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package profiles over first to speed up caching layers
+COPY package*.json ./
+
+# Install packages inside the Linux workspace environment
+RUN npm install
+
+# Copy the rest of your root source files
+COPY . .
+
+# Expose Vite's native development rendering engine port
+EXPOSE 5173
+
+# Boot the Vite development environment server bound to your host network
+CMD ["npm", "run", "dev", "--", "--host"]
