@@ -11,7 +11,7 @@ COPY . .
 
 # CRITICAL: Inject your Azure VM Backend API URL during the build phase
 # Replace <YOUR_VM_PUBLIC_IP> with your actual Azure VM Public IP address
-ENV VITE_API_URL=http://<YOUR_VM_PUBLIC_IP>:5144
+ENV VITE_API_URL=http://20.25.50.191:5144
 
 # Compile the application (generates the 'dist' production directory)
 RUN npm run build
