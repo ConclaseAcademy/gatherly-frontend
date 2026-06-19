@@ -2,7 +2,7 @@ name: Deploy Frontend to Azure VM
 
 on:
   push:
-    branches: [ "main", "develop" ] # Triggers the pipeline when pushing to main, develop branch
+    branches: [ "main", "develop" ] # Triggers the pipeline when pushing to main or develop branches
 
 jobs:
   build-and-deploy:
@@ -26,25 +26,24 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/gatherly-ui:latest
+          # INJECT THE BACKEND LINK: Dynamic build-arg mapping to your VM IP
+          build-args: |
+            VITE_API_URL=${{ secrets.API_URL }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: SSH into Azure VM and Run Container
+      - name: SSH into Azure VM and Deploy via Compose
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
-            # 1. Stop and remove the old running UI container if it exists
-            docker stop gatherly-frontend-container || true
-            docker rm gatherly-frontend-container || true
+            # 1. Step into your isolated frontend environment folder on the VM
+            cd /home/${{ secrets.VM_USER }}/gatherly-frontend
             
-            # 2. Force pull the fresh image directly from Docker Hub onto the VM
-            docker pull ${{ secrets.DOCKER_USERNAME }}/gatherly-ui:latest
+            # 2. Pull down the fresh image built with the injected API endpoint
+            docker compose pull
             
-            # 3. Run the container on Port 80, detached, with automatic restart policy
-            docker run --name gatherly-frontend-container \
-              -p 80:80 \
-              -d --restart unless-stopped \
-              ${{ secrets.DOCKER_USERNAME }}/gatherly-ui:latest
+            # 3. Spin up the container seamlessly via Option B Compose architecture
+            docker compose up -d
