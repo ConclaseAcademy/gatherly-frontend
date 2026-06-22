@@ -23,7 +23,7 @@ const Hero = () => {
       </p>
 
       <div className="hero-btns">
-        <Link to="/signup"><button>Create Account</button></Link>
+        <Link to="/signup"><button>Create An Account</button></Link>
         <Link to="/events">
           <button className="secondary">
             See Events
