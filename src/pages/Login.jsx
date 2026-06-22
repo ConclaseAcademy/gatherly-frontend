@@ -49,7 +49,7 @@ function Login() {
   }
 
   console.log({ email, password });
-  axios.post('https://staging-api.gatherly.io/api/auth/login', { email, password })
+  axios.post('http://20.25.50.191:5144/api/auth/login', { email, password })
     .then((response) => {
       console.log(response.data);
       toast.success("Login Successful!", {
