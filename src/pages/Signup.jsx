@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+
 function Signup() {
   const [name, setName] = useState('')
   const [contact, setContact] = useState('')
@@ -12,6 +13,7 @@ function Signup() {
   const [password, setPassword] = useState('')
 
   const [showPassword, setShowPassword] = useState(false);
+  const API_BASE_URL = 'http://20.25.50.191:5144';
 
   const navigate = useNavigate();
   const inputStyle = {
@@ -33,55 +35,65 @@ function Signup() {
     fontWeight: '500',
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    if (!name.trim()) {
+      toast.error('Please enter your full name');
+      return;
+    }
+
+    if (!contact.trim()) {
+      toast.error('Please enter your contact number');
+      return;
+    }
 
     if (!emailRegex.test(email)) {
-      toast.error("Please enter a valid email address");
+      toast.error('Please enter a valid email address');
       return;
     }
 
     if (!passwordRegex.test(password)) {
       toast.error(
-        "Password must be at least 8 characters and contain uppercase, lowercase, and a number"
+        'Password must be at least 8 characters and contain uppercase, lowercase, and a number'
       );
       return;
     }
 
-     
-    const data = {
-      fullName: name,
-      phone: contact,
-      email: email,
-      password: password,
-      role: "Organizer",
-    }
+    try {
+      const payload = {
+        fullName: name.trim(),
+        phone: contact.trim(),
+        email: email.trim(),
+        password,
+        role: 'Organizer',
+      };
 
+      await axios.post(`${API_BASE_URL}/api/Auth/register`, payload);
 
-     axios.post('http://20.25.50.191:5144/api/auth/register', data).then((response) => {
       toast.success('Signup Successful!', {
-position: "top-center",
-autoClose: 5000,
-hideProgressBar: false,
-closeOnClick: false,
-pauseOnHover: true,
-draggable: true,
-progress: undefined,
-theme: "light",
-
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
       });
-       navigate('/login');
-    }).catch((error) => {
-      console.error(error);
-      toast.error("Signup Failed. Please try again.");
-    });
-   
- 
+
+      navigate('/login');
+    } catch (error) {
+      console.error('Signup error:', error.response?.status, error.response?.data || error.message);
+      toast.error(
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        'Signup failed. Please check your details and try again.'
+      );
+    }
   };
 
   const hidePws = () => {
@@ -90,7 +102,6 @@ theme: "light",
     
 
    }
-
   return (
     <div style={{
       minHeight: '100vh',

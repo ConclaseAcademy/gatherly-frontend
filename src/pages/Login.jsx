@@ -9,6 +9,7 @@ function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate();
+  const API_BASE_URL = 'http://20.25.50.191:5144';
   const inputStyle = {
     width: '100%',
     padding: '14px 16px',
@@ -28,50 +29,62 @@ function Login() {
     fontWeight: '500',
   }
 
-  const handleSubmit = (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    if (!emailRegex.test(email)) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
 
-  if (!emailRegex.test(email)) {
-    alert("Please enter a valid email address");
-    return;
-  }
+    if (!password) {
+      toast.error('Please enter your password');
+      return;
+    }
 
-  if (!passwordRegex.test(password)) {
-    toast.error(
-      "Password must be at least 8 characters and contain uppercase, lowercase, and a number"
-    );
-    return;
-  }
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/Auth/login`, {
+        identifier: email.trim(),
+        password,
+      });
 
-  console.log({ email, password });
-  axios.post('http://20.25.50.191:5144/api/auth/login', { email, password })
-    .then((response) => {
-      console.log(response.data);
-      toast.success("Login Successful!", {
-        position: "top-right",
+      const payload = response.data?.data || response.data;
+      const token = payload?.accessToken || payload?.token || payload?.jwt;
+
+      if (token) {
+        localStorage.setItem('token', token);
+      }
+
+      if (payload?.refreshToken) {
+        localStorage.setItem('refreshToken', payload.refreshToken);
+      }
+
+      toast.success('Login Successful!', {
+        position: 'top-right',
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-      }
+      });
+
+      navigate('/dashboard');
+    } catch (error) {
+      console.error(
+        'Login error:',
+        error.response?.status,
+        error.response?.data || error.message
       );
-        navigate('/dashboard')
-
-    })
-
-    
-    .catch((error) => {
-      console.error(error);
-      toast.error("Login Failed. Please check your credentials and try again.");
-    });
+      toast.error(
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.response?.data?.errors?.[0] ||
+        'Login failed. Please check your credentials and try again.'
+      );
+    }
   };
-
   return (
     <div style={{
       minHeight: '100vh',
