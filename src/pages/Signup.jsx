@@ -63,7 +63,7 @@ function Signup() {
     }
 
 
-     axios.post('https://staging-api.gatherly.io/api/auth/register', data).then((response) => {
+     axios.post('http://20.25.50.191:5144/api/auth/register', data).then((response) => {
       toast.success('Signup Successful!', {
 position: "top-center",
 autoClose: 5000,
