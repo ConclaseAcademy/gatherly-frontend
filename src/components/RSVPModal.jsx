@@ -6,6 +6,9 @@ import { HiOutlineUsers } from 'react-icons/hi2';
 import { CiLocationOn } from 'react-icons/ci';
 import { FaRegUser } from "react-icons/fa6";
 import { CiMail } from "react-icons/ci";
+import { registerForEvent } from "../api/registrationApi";
+
+
 function RSVPModal({ isOpen, onClose, event }) {
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: '', email: '', phone: '' });
@@ -16,6 +19,16 @@ function RSVPModal({ isOpen, onClose, event }) {
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
+
+  const handleRSVP = async () => {
+  try {
+    await registerForEvent(event.id);
+    alert("Successfully registered!");
+  } catch (error) {
+    console.error(error);
+    alert("Registration failed");
+  }
+};
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -330,6 +343,7 @@ function RSVPModal({ isOpen, onClose, event }) {
                 e.currentTarget.style.transform = 'translateY(0)';
                 e.currentTarget.style.boxShadow = '0 10px 18px rgba(163, 0, 56, 0.25)';
               }}
+              onClick={handleRSVP}
             >
               {submitted ? 'RSVP Sent ✓' : 'Confirm RSVP →'}
             </button>
