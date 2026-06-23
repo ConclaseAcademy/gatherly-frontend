@@ -16,20 +16,7 @@ import TicketModal from '../components/TicketModal';
 
 
 
-const initialEvents = [
-{
-id: 1,
-category: "sport",
-title: "Freshers Football Match",
-description:
-"An upcoming match with Lasu year 1 students. Register to be part of the amazing team.",
-date: "Wed, Jun 17 2026",
-time: "04:15 PM",
-location: "Lasu Football Pitch, Lagos",
-attendees: "01/150",
-price: "Free",
-},
-];
+const initialEvents = [];
 
 
 const Dashboard = () =>{
