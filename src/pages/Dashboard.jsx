@@ -56,7 +56,7 @@ const Dashboard = () => {
       }
     }, [location, navigate]);
 
-  function Dashboard() {
+ {/* function Dashboard() {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
@@ -70,7 +70,7 @@ const Dashboard = () => {
     } catch (error) {
       console.error("Failed to fetch events:", error);
     }
-  };
+  }; */}
 
     return(
         <>
