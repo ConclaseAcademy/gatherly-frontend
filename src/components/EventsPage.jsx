@@ -59,7 +59,7 @@ const EventsPage = () => {
   };
 
   useEffect(() => {
-      axios.get('http://20.25.50.191:5144')
+      axios.get('http://20.25.50.191:5144/api/Events')
         .then((response) => {
           console.log('Events data:', response.data);
           setEventData(response.data);
