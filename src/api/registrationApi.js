@@ -4,9 +4,12 @@ const API = axios.create({
   baseURL: "http://20.25.50.191:5144",
 });
 
+const token = localStorage.getItem("token")
 
 export const registerForEvent = async (eventId) => {
-  const response = await API.post(`/events/${eventId}/register`);
+  const response = await API.post(`/events/${eventId}/register`,
+   
+  );
   return response.data;
 };
 

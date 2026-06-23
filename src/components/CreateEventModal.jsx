@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { createEvent } from '../api/Api'
+import { toast } from 'react-toastify';
 
 const inputStyle = {
   width: '100%',
@@ -78,7 +80,35 @@ function CreateEventModal({ isOpen, onClose, eventToEdit, onSubmit }) {
       price,
       spots: `${Math.max(0, Number(capacity || 0) - 10)} spots left`,
     }
+   const handleSubmit = async (e) => {
+  e.preventDefault();
 
+  try {
+    await createEvent(payload);
+
+    toast.success('Signup Successful!', {
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      theme: 'light',
+    });
+  } catch (error) {
+    console.error(
+      'error:',
+      error.response?.status,
+      error.response?.data || error.message
+    );
+
+    toast.error(
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      'An error occurred.'
+    );
+  }
+};
     if (typeof onSubmit === 'function') {
       onSubmit(payload)
     } else {
@@ -93,6 +123,7 @@ function CreateEventModal({ isOpen, onClose, eventToEdit, onSubmit }) {
   }
 
   if (!isOpen) return null
+
 
   return (
     <div
