@@ -59,7 +59,7 @@ const EventsPage = () => {
   };
 
   useEffect(() => {
-      axios.get('https://staging-api.gatherly.io/api/events')
+      axios.get('http://20.25.50.191:5144')
         .then((response) => {
           console.log('Events data:', response.data);
           setEventData(response.data);

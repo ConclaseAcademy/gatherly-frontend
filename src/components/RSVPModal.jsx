@@ -37,7 +37,7 @@ function RSVPModal({ isOpen, onClose, event }) {
       onClose();
       setSubmitted(false);
       setForm({ name: '', email: '', phone: '' });
-      navigate('/dashboard', {
+      navigate('/events', {
         replace: true,
         state: {
           showTicketModal: true,

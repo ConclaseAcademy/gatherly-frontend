@@ -10,7 +10,7 @@ import CreateEventModal from '../components/CreateEventModal';
 import CheckInModal from '../components/CheckInModal';
 import ShareEventModal from '../components/ShareEventModal';
 import TicketModal from '../components/TicketModal';
-
+import {getEvents} from '../api/Api';
 
 
 
@@ -19,7 +19,7 @@ import TicketModal from '../components/TicketModal';
 const initialEvents = [];
 
 
-const Dashboard = () =>{
+const Dashboard = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [events, setEvents] = useState(initialEvents);
@@ -55,6 +55,22 @@ const Dashboard = () =>{
         navigate(location.pathname, { replace: true, state: {} });
       }
     }, [location, navigate]);
+
+  function Dashboard() {
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = async () => {
+    try {
+      const response = await getEvents();
+      setEvents(response.data);
+    } catch (error) {
+      console.error("Failed to fetch events:", error);
+    }
+  };
 
     return(
         <>
