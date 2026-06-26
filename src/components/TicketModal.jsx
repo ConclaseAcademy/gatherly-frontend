@@ -14,12 +14,12 @@ const TicketModal = ({ isOpen, onClose, event, attendee }) => {
   const handleDownload = () => {
     const content = [
       "Event Ticket",
-      `Event: ${event?.title || "Your Event"}`,
-      `Date: ${event?.date || "TBD"}`,
-      `Time: ${event?.time || "TBD"}`,
-      `Location: ${event?.location || "TBD"}`,
-      `Attendee: ${attendee?.name || "Guest"}`,
-      `Email: ${attendee?.email || ""}`,
+      `Event: ${event?.title }`,
+      `Date: ${event?.date}`,
+      `Time: ${event?.time}`,
+      `Location: ${event?.venue}`,
+      `Attendee: ${attendee?.name}`,
+      `Email: ${attendee?.email }`,
       `Ticket Code: ${ticketCode}`,
     ].join("\n");
 
@@ -153,10 +153,8 @@ const TicketModal = ({ isOpen, onClose, event, attendee }) => {
               </span>
                  Date & Time
               </div>
-              <div style={{ fontWeight: 600, fontSize: "13px", color: '#666', lineHeight: '23px', marginLeft: '15px' }}>
-                {event?.date || "Wednesday, May 13, 2026"}
-              </div>
-              <div style={{ fontSize: "13px", color: '#666', lineHeight: '23px', marginLeft: '15px' }}>{event?.time || "06:30 AM"}</div>
+             
+              <div style={{ fontSize: "13px", color: '#666', lineHeight: '23px', marginLeft: '15px' }}>{event?.startTime}</div>
             </div>
 
             <div>
@@ -172,11 +170,10 @@ const TicketModal = ({ isOpen, onClose, event, attendee }) => {
                </span>
                  Location
               </div>
-              <div style={{ fontWeight: 600, fontSize: "13px", color: '#666', lineHeight: '23px', marginLeft: '15px' }}>
-                {event?.location || "Ikeja Recreational Center"}
-              </div>
+              
+              
               <div style={{ fontSize: "13px", color: '#666', lineHeight: '23px', marginLeft: '15px' }}>
-                Lagos, Nigeria
+                {event.venue}
               </div>
             </div>
 
@@ -194,7 +191,7 @@ const TicketModal = ({ isOpen, onClose, event, attendee }) => {
                  Capacity
               </div>
               <div style={{ fontWeight: 600, fontSize: "13px", color: '#666', lineHeight: '23px', marginLeft: '15px' }}>
-                {event?.attendees ? `${event.attendees} Registered` : "39/100 Registered"}
+                {event?.capacity ? `${event.capacity} Registered` : "39/100 Registered"}
               </div>
               <div style={{ fontSize: "13px", color: "#666", lineHeight: '23px', marginLeft: '15px' }}>
                 {event?.spots || "61 spots left"}

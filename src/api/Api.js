@@ -1,57 +1,97 @@
 import axios from "axios";
 
-const API_URL = "http://20.25.50.191:5144";
+const API_URL = "http://20.25.50.191:5144/api";
 
-export const getEvents = () => axios.get(API_URL);
+export const createEvent = async (payload) => {
+  const token = localStorage.getItem("token");
 
-export const getEvent = (eventId) =>
-  axios.get(`${API_URL}/${eventId}`);
-
-export const createEvent = (data) =>
-  axios.post(API_URL, data,
-
-     {
+  const response = await axios.post(
+    `${API_URL}/Events`,
+    payload,   // ✅ use payload
+    {
       headers: {
-        Authorization: `Bearer ${token}` 
-      }
+        Authorization: `Bearer ${token}`,
+      },
     }
   );
 
-export const updateEvent = (eventId, data) =>
-  axios.put(`${API_URL}/${eventId}`, data,
-     {
+  return response.data;
+};
+
+export const updateEvent = (eventId, data) => {
+  const token = localStorage.getItem("token");
+
+  return axios.put(
+    `${API_URL}/Events/${eventId}`,
+    data,
+    {
       headers: {
-        Authorization: `Bearer ${token}` 
-      }
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
+
+export const deleteEvent = (eventId, data) => {
+  const token = localStorage.getItem("token");
+
+  return axios.put(
+    `${API_URL}/Events/${eventId}`,
+    data,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
+
+export const closeEvent = (eventId, data) => {
+  const token = localStorage.getItem("token");
+
+  return axios.put(
+    `${API_URL}/Events/${eventId}`,
+    data,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
+
+export const getEvents = () => {
+  return axios.get(
+    `${API_URL}/Events`
+  );
+
+  
+};
+
+export const getMyEvents = () => {
+   const token = localStorage.getItem("token");
+  return axios.get(
+    `${API_URL}/Events/my-events`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     }
   );
 
-export const deleteEvent = (eventId) =>
-  axios.delete(`${API_URL}/${eventId}`,
-     {
+  
+};
+
+export const getMyProfile = () => {
+   const token = localStorage.getItem("token");
+  return axios.get(
+    `${API_URL}/Events/my-events`,
+    {
       headers: {
-        Authorization: `Bearer ${token}` 
-      }
+        Authorization: `Bearer ${token}`,
+      },
     }
   );
 
-export const publishEvent = (eventId) =>
-  axios.patch(`${API_URL}/${eventId}/publish`);
-
-export const closeEvent = (eventId) =>
-  axios.patch(`${API_URL}/${eventId}/close`,
-     {
-      headers: {
-        Authorization: `Bearer ${token}` 
-      }
-    }
-  );
-
-export const getMyEvents = () =>
-  axios.get(`${API_URL}/my-events`,
-     {
-      headers: {
-        Authorization: `Bearer ${token}` 
-      }
-    }
-  );
+  
+};

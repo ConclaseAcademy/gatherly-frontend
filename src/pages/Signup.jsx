@@ -10,6 +10,7 @@ function Signup() {
   const [name, setName] = useState('')
   const [contact, setContact] = useState('')
   const [email, setEmail] = useState('')
+  const [role, setRole] = useState('')
   const [password, setPassword] = useState('')
 
   const [showPassword, setShowPassword] = useState(false);
@@ -69,7 +70,7 @@ function Signup() {
         phone: contact.trim(),
         email: email.trim(),
         password,
-        role: 'Organizer',
+        role: role,
       };
 
       await axios.post(`${API_BASE_URL}/api/Auth/register`, payload);
@@ -99,8 +100,6 @@ function Signup() {
   const hidePws = () => {
 
     setShowPassword(showPassword==true?false:true);
-    
-
    }
   return (
     <div style={{
@@ -154,22 +153,14 @@ function Signup() {
               style={inputStyle}
             />
           </div>
-
-          {/* role: Attendee or Organizer using radio */}
-          {/* <div>
-            <label style={labelStyle}>Role</label>
-            <div style={{display:"flex", alignItems:'center', gap:"20px"}}>
-              <label style={{display:"flex", alignItems:'center', gap:"6px"}}>
-                <input type="radio" name="role" value="organizer" defaultChecked />
-                Organizer
-              </label>
-              <label style={{display:"flex", alignItems:'center', gap:"6px"}}>
-                <input type="radio" name="role" value="attendee" />
-                Attendee
-              </label>
-            </div>
             
-          </div> */}
+          <div>
+            <label style={labelStyle}>Role</label>
+           <select value={role}> onchange={e => setRole(e.target.value)}
+            <option>Organizer</option>
+            <option>Attendee</option>
+           </select>
+          </div>
 
           <div>
             <label style={labelStyle}>Email Address</label>

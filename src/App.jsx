@@ -6,6 +6,8 @@ import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import { ToastContainer } from 'react-toastify';
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 
 function App() {
@@ -31,6 +33,8 @@ theme="light"
             <Route path="login" element={<Login />} />
             <Route path="*" element={<NotFound />} />
             <Route path="dashboard" element={<Dashboard />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             
             
         </Routes>

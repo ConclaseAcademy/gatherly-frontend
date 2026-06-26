@@ -3,6 +3,7 @@ import Logo from "./Logo";
 import { BsCalendarDateFill } from "react-icons/bs";
 import { PiCirclesFour } from "react-icons/pi";
 import { FiLogOut } from "react-icons/fi";
+import { getMyEvents } from '../api/Api';
 
 
 
@@ -10,7 +11,7 @@ import { FiLogOut } from "react-icons/fi";
 
 const NavbarTwo = ({ onCreateClick }) => {
   const navigate = useNavigate();
-
+const role= localStorage.getItem("role")
   return (
     <nav className="navbar navbar-two">
       <div className="logo-wrap">
@@ -31,9 +32,13 @@ const NavbarTwo = ({ onCreateClick }) => {
           Logout
         </button>
       </div>
-      <button className="organizer-create-btn" onClick={onCreateClick}>
+      
+     {
+      role=="Organizer"? <button className="organizer-create-btn" onClick={onCreateClick}>
         <span style={{ color: '#FCB8C9' }}>+</span> Create Events
-      </button>
+     
+     </button> :''
+     }
     </nav>
   );
 };

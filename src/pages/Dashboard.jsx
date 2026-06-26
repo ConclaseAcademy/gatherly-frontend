@@ -10,67 +10,45 @@ import CreateEventModal from '../components/CreateEventModal';
 import CheckInModal from '../components/CheckInModal';
 import ShareEventModal from '../components/ShareEventModal';
 import TicketModal from '../components/TicketModal';
-import {getEvents} from '../api/Api';
+import { getMyEvents } from '../api/Api';
 
 
 
 
 
-const initialEvents = [];
+
+
 
 
 const Dashboard = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const [events, setEvents] = useState(initialEvents);
+   
     const [openMenuId, setOpenMenuId] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
     const [editingEvent, setEditingEvent] = useState(null);
     const [checkInEvent, setCheckInEvent] = useState(null);
     const [showshareEventModal, setShowShareEventModal] = useState(false)
     const [shareEvent, setShareEvent] = useState(null)
-    const [ticketOpen, setTicketOpen] = useState(false);
+   const [ticketOpen, setTicketOpen] = useState(false);
     const [ticketEvent, setTicketEvent] = useState(null);
     const [attendee, setAttendee] = useState(null);
+   
+    const role= localStorage.getItem("role")
 
-    const handleSaveEvent = (updatedEvent) => {
-      setEvents((prev) =>
-        prev.some((item) => item.id === updatedEvent.id)
-          ? prev.map((item) => (item.id === updatedEvent.id ? { ...item, ...updatedEvent } : item))
-          : [updatedEvent, ...prev]
-      );
-      setEditingEvent(null);
-    };
+     const [eventData, setEventData] = useState([]);
+     useEffect(()=>{
+     getMyEvents().then((response)=>{
+      setEventData(response.data.data.items)
+      console.log(response)
+     }).catch((error)=>{
+      toast.error(error.data.messgae || "unable to load your event")
+      console.log(error)
+     })
+     },[])
 
-    const handleDeleteEvent = (eventId) => {
-      setEvents((prev) => prev.filter((event) => event.id !== eventId));
-      setOpenMenuId(null);
-    };
-
-    useEffect(() => {
-      if (location.state?.showTicketModal) {
-        setTicketOpen(true);
-        setTicketEvent(location.state.ticketEvent || null);
-        setAttendee(location.state.attendee || null);
-        navigate(location.pathname, { replace: true, state: {} });
-      }
-    }, [location, navigate]);
-
- {/* function Dashboard() {
-  const [events, setEvents] = useState([]);
-
-  useEffect(() => {
-    fetchEvents();
-  }, []);
-
-  const fetchEvents = async () => {
-    try {
-      const response = await getEvents();
-      setEvents(response.data);
-    } catch (error) {
-      console.error("Failed to fetch events:", error);
-    }
-  }; */}
+    
+  
 
     return(
         <>
@@ -79,7 +57,7 @@ const Dashboard = () => {
           isOpen={modalOpen}
           onClose={() => { setModalOpen(false); setEditingEvent(null); }}
           eventToEdit={editingEvent}
-          onSubmit={handleSaveEvent}
+          
         />
         <CheckInModal isOpen={!!checkInEvent} onClose={() => setCheckInEvent(null)} eventTitle={checkInEvent?.title} />
         <TicketModal isOpen={ticketOpen} onClose={() => setTicketOpen(false)} event={ticketEvent} attendee={attendee} />
@@ -92,11 +70,15 @@ const Dashboard = () => {
              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '8px' }}>
                <div>
                  <h1>My Events Dashboard</h1>
-                 <p>Manage your events and check-in attendees</p>
+                <p>
+                 {
+                  role=="Organizer"?"Manage your events and check-in attendees" :"You have not register for any event yet"
+                 }
+                 </p>
                </div>
                
              </div>
-              <div className="dashboard-grid"> {events.map((event) => ( 
+              <div className="dashboard-grid"> {eventData.map((event) => ( 
                 <div className="dashboard-card" key={event.id}> 
                 <div className="card-banner"> 
                     <button
@@ -140,10 +122,10 @@ const Dashboard = () => {
                      
                     <p> <span style={{ backgroundColor:"white", padding:"6px", marginBlockStart:"-20px", borderRadius:"10%", display:"inline-block", color:"#E57591", marginBottom:"6px" }}>
                             <BsCalendarDateFill />
-                             </span> {event.date} &nbsp; {event.time}</p> 
+                             </span> {event.date} &nbsp; {event.startTime}</p> 
                     <p> <span style={{ backgroundColor:"white", padding:"6px", marginBlockStart:"-20px", borderRadius:"10%", display:"inline-block", color:"#E57591", marginBottom:"6px" }}>
                             <CiLocationOn />
-                             </span> {event.location}</p>
+                             </span> {event.venue}</p>
                     <p> <span style={{ backgroundColor:"white", padding:"6px", marginBlockStart:"-20px", borderRadius:"10%", display:"inline-block", color:"#E57591", marginBottom:"6px" }}>
                             <HiOutlineUsers />
                              </span> {event.attendees} Attendees</p> 

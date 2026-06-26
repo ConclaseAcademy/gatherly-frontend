@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const API_BASE_URL = 'http://20.25.50.191:5144';
   const inputStyle = {
@@ -52,7 +53,11 @@ function Login() {
 
       const payload = response.data?.data || response.data;
       const token = payload?.accessToken || payload?.token || payload?.jwt;
-
+      const role = response?.data?.data?.user?.role;
+      if (role) {
+        localStorage.setItem('role', role);
+      }
+     console.log(response)
       if (token) {
         localStorage.setItem('token', token);
       }
@@ -85,6 +90,11 @@ function Login() {
       );
     }
   };
+
+  const hidePws = () => {
+
+    setShowPassword(showPassword==true?false:true);
+  }
   return (
     <div style={{
       minHeight: '100vh',
@@ -129,14 +139,34 @@ function Login() {
 
           <div>
             <label style={labelStyle}>Password</label>
-            <input
+            <div style={{display:"flex", alignItems:'center', gap:"10px"}}>
+              <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Wealth1010"
               style={inputStyle}
             />
+             <button onClick={()=>hidePws()} type="button" style={{
+             
+            backgroundColor: 'gray',
+              border: 'none',
+              cursor: 'pointer',
+                color: 'white',
+              padding: '6px 12px',
+              borderRadius: '6px',
+              fontSize: '12px',
+            }}>
+              {showPassword ? "Hide" : "Show"}
+            </button>
+            </div>
           </div>
+
+          <p className="forgot-password">
+             <Link to="/forgot-password">Forgot Password?</Link>
+           </p>
+
+          
 
           <button type="submit" style={{
             width: '100%',

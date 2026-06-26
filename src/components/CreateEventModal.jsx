@@ -29,15 +29,15 @@ const rowStyle = {
 }
 
 function CreateEventModal({ isOpen, onClose, eventToEdit, onSubmit }) {
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [datetime, setDatetime] = useState('')
+  const [title, setTitle] = useState('graduation')
+  const [description, setDescription] = useState('conclase graduation')
+  const [datetime, setDatetime] = useState('12/21/2026')
   const [category, setCategory] = useState('Conference')
-  const [location, setLocation] = useState('')
-  const [organizerName, setOrganizerName] = useState('')
-  const [organizerEmail, setOrganizerEmail] = useState('')
-  const [capacity, setCapacity] = useState('')
-  const [price, setPrice] = useState('')
+  const [location, setLocation] = useState('lagos')
+  const [organizerName, setOrganizerName] = useState('conclase')
+  const [organizerEmail, setOrganizerEmail] = useState('conclase@gmail.com')
+  const [capacity, setCapacity] = useState('15')
+  const [price, setPrice] = useState('100')
 
   const resetForm = () => {
     setTitle(''); setDescription(''); setDatetime(''); setCategory('Conference')
@@ -63,66 +63,58 @@ function CreateEventModal({ isOpen, onClose, eventToEdit, onSubmit }) {
     resetForm()
   }, [isOpen, eventToEdit])
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-
-    const payload = {
-      id: eventToEdit?.id || Date.now(),
-      title,
-      description,
-      date: datetime ? new Date(datetime).toLocaleString() : 'TBD',
-      time: datetime ? new Date(datetime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'TBD',
-      category,
-      location,
-      organizerName,
-      organizerEmail,
-      attendees: capacity || '0/150',
-      price,
-      spots: `${Math.max(0, Number(capacity || 0) - 10)} spots left`,
-    }
-   const handleSubmit = async (e) => {
+ const handleSubmit = async (e) => {
   e.preventDefault();
 
-  try {
-    await createEvent(payload);
-
-    toast.success('Signup Successful!', {
-      position: 'top-center',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      theme: 'light',
-    });
-  } catch (error) {
-    console.error(
-      'error:',
-      error.response?.status,
-      error.response?.data || error.message
-    );
-
-    toast.error(
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      'An error occurred.'
-    );
-  }
+  const payload = {
+  title,
+  category,
+  venue: location,
+  date: datetime ? new Date(datetime).toISOString().split("T")[0] : "",
+  startTime: datetime
+    ? new Date(datetime).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "",
+  endTime: datetime
+    ? new Date(
+        new Date(datetime).getTime() + 2 * 60 * 60 * 1000
+      ).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "",
+  description,
+  capacity: Number(capacity) || 0,
+  visibility: "Public",
+  allowReEntry: true,
+  vipEnabled: false,
+  rsvpDeadline: datetime
+    ? new Date(datetime).toISOString()
+    : "",
 };
-    if (typeof onSubmit === 'function') {
-      onSubmit(payload)
-    } else {
-      console.log(payload)
-    }
-    onClose()
-  }
+   createEvent(payload).then((response)=>{
+  toast.success(response.data.message);
+  }).catch((error)=>{
+   toast.error(error.data.message || "Unable to create event!")
+  })
 
-  const handleCancel = () => {
-    resetForm()
-    onClose()
-  }
+  
 
-  if (!isOpen) return null
+//   if (onSubmit) {
+//   onSubmit(payload);
+// }
+  onClose();
+};
+
+const handleCancel = () => {
+  resetForm();
+  onClose();
+};
+
+
+if (!isOpen) return null;
 
 
   return (
@@ -275,5 +267,6 @@ function CreateEventModal({ isOpen, onClose, eventToEdit, onSubmit }) {
   </div>
   )
 }
+
 
 export default CreateEventModal

@@ -9,20 +9,24 @@ import { CiMail } from "react-icons/ci";
 import { registerForEvent } from "../api/registrationApi";
 
 
-function RSVPModal({ isOpen, onClose, event }) {
+function RSVPModal({ isOpen, onClose, event, onSuccess}) {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ name: '', email: '', phone: '' });
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+   const [contact, setContact] = useState('')
   const [submitted, setSubmitted] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleChange = (field, value) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
-  };
+ 
 
+
+ 
   const handleRSVP = async () => {
   try {
-    await registerForEvent(event.id);
+
+  const response=  await registerForEvent(event.eventId);
+  console.log(response)
     alert("Successfully registered!");
   } catch (error) {
     console.error(error);
@@ -30,27 +34,10 @@ function RSVPModal({ isOpen, onClose, event }) {
   }
 };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setSubmitted(true);
-    window.setTimeout(() => {
-      onClose();
-      setSubmitted(false);
-      setForm({ name: '', email: '', phone: '' });
-      navigate('/events', {
-        replace: true,
-        state: {
-          showTicketModal: true,
-          ticketEvent: event,
-          attendee: { name: form.name, email: form.email },
-        },
-      });
-    }, 900);
-  };
+  
 
   const handleClose = () => {
     setSubmitted(false);
-    setForm({ name: '', email: '', phone: '' });
     onClose();
   };
 
@@ -104,8 +91,7 @@ function RSVPModal({ isOpen, onClose, event }) {
             placeItems: 'center',
             boxShadow: '0 4px 10px rgba(180, 90, 130, 0.12)',
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = '#ffeaf1')}
-          onMouseLeave={(e) => (e.currentTarget.style.background = '#fff5f8')}
+          
         >
           ✕
         </button>
@@ -164,7 +150,7 @@ function RSVPModal({ isOpen, onClose, event }) {
             fontWeight: '400px'
           }}
         >
-          {event?.title || 'Free outdoor yoga session for all levels.'} Bring your mat and enjoy 3 hours of mindfulness.
+          {event?.title}
         </p>
 
         
@@ -184,10 +170,7 @@ function RSVPModal({ isOpen, onClose, event }) {
               </span>
              Date & Time
             </div>
-            <div style={{ fontWeight: 500, color: '#222', fontSize: '16px', lineHeight: '23px', marginLeft: '15px' }}>
-              {event?.date || 'Wednesday, May 13, 2026'}
-            </div>
-            <div style={{ color: '#666', lineHeight: '23px', marginLeft: '15px' }}>{event?.time || '10:30 AM'}</div>
+            <div style={{ color: '#666', lineHeight: '23px', marginLeft: '15px' }}>{event.date} &nbsp; {event.startTime}</div>
           </div>
 
           <div style={{ background: '#fff7fa', border: '1px solid #ffe2eb', borderRadius: '12px', padding: '10px' }}>
@@ -197,10 +180,8 @@ function RSVPModal({ isOpen, onClose, event }) {
                </span>      
              Location
             </div>
-            <div style={{ fontWeight: 500, color: '#222', fontSize: '16px', marginLeft: '15px' }}>
-              {event?.location || 'Ijoko Recreational Center'}
-            </div>
-            <div style={{ color: '#666', lineHeight: '23px', marginLeft: '15px'}}>Lagos, Nigeria</div>
+           
+            <div style={{ color: '#666', lineHeight: '23px', marginLeft: '15px'}}>{event.venue}</div>
           </div>
 
           <div style={{ background: '#fff7fa', border: '1px solid #ffe2eb', borderRadius: '12px', padding: '10px' }}>
@@ -211,10 +192,10 @@ function RSVPModal({ isOpen, onClose, event }) {
                Capacity
             </div>
             <div style={{ fontWeight: 500, color: '#222', fontSize: '16px', lineHeight: '23px', marginLeft: '15px'}}>
-              {event?.attendees || 0} Registered
+              {event?.capacity || 0} Registered
             </div>
             <div style={{ color: '#666',  lineHeight: '23px', marginLeft: '15px'}}>
-              {event?.spots || 'Spots left'}</div>
+              {event?.registeredCount || 'Spots left'}</div>
           </div>
 
           <div style={{ background: '#fff7fa', border: '1px solid #ffe2eb', borderRadius: '12px', padding: '10px' }}>
@@ -278,18 +259,18 @@ function RSVPModal({ isOpen, onClose, event }) {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} style={{ marginTop: '18px' }}>
+        <div style={{ marginTop: '18px' }}>
           <label style={{ display: 'block', fontSize: '12px', marginBottom: '6px', color: '#555', fontWeight: 700 }}>
             Full Name
           </label>
           <input
-            value={form.name}
-            onChange={(e) => handleChange('name', e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             placeholder="Wealth Happiness"
             required
             style={{ width: '100%', padding: '12px', border: '1px solid #e5d6de', borderRadius: '10px', marginBottom: '12px', outline: 'none', fontFamily: 'Poppins, sans-serif', background: '#fff', color: '#222', boxSizing: 'border-box' }}
-            onFocus={(e) => (e.currentTarget.style.borderColor = '#d96a98')}
-            onBlur={(e) => (e.currentTarget.style.borderColor = '#e5d6de')}
+            
+            
           />
 
           <label style={{ display: 'block', fontSize: '12px', marginBottom: '6px', color: '#555', fontWeight: 700 }}>
@@ -297,31 +278,29 @@ function RSVPModal({ isOpen, onClose, event }) {
           </label>
           <input
             type="email"
-            value={form.email}
-            onChange={(e) => handleChange('email', e.target.value)}
+            value={email}
+            onChange={(e) => setEmail (e.target.value)}
             placeholder="wealth@gmail.com"
             required
             style={{ width: '100%', padding: '12px', border: '1px solid #e5d6de', borderRadius: '10px', marginBottom: '12px', outline: 'none', fontFamily: 'Poppins, sans-serif', background: '#fff', color: '#222', boxSizing: 'border-box' }}
-            onFocus={(e) => (e.currentTarget.style.borderColor = '#d96a98')}
-            onBlur={(e) => (e.currentTarget.style.borderColor = '#e5d6de')}
+            
           />
 
           <label style={{ display: 'block', fontSize: '12px', marginBottom: '6px', color: '#555', fontWeight: 700 }}>
             Phone Number
           </label>
           <input
-            value={form.phone}
-            onChange={(e) => handleChange('phone', e.target.value)}
+            value={contact}
+            onChange={(e) => setContact(e.target.value)}
             placeholder="+234 903 639 3969"
             required
             style={{ width: '100%', padding: '12px', border: '1px solid #e5d6de', borderRadius: '10px', outline: 'none', fontFamily: 'Poppins, sans-serif', background: '#fff', color: '#222', boxSizing: 'border-box' }}
-            onFocus={(e) => (e.currentTarget.style.borderColor = '#d96a98')}
-            onBlur={(e) => (e.currentTarget.style.borderColor = '#e5d6de')}
+            
           />
 
           <div style={{ display: 'flex', gap: '10px', marginTop: '22px' }}>
             <button
-              type="submit"
+              type="button"
               style={{
                 flex: 1,
                 padding: '13px',
@@ -335,14 +314,7 @@ function RSVPModal({ isOpen, onClose, event }) {
                 boxShadow: '0 10px 18px rgba(163, 0, 56, 0.25)',
                 transition: 'transform 0.15s ease, box-shadow 0.15s ease',
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-1px)';
-                e.currentTarget.style.boxShadow = '0 12px 22px rgba(163, 0, 56, 0.32)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 10px 18px rgba(163, 0, 56, 0.25)';
-              }}
+          
               onClick={handleRSVP}
             >
               {submitted ? 'RSVP Sent ✓' : 'Confirm RSVP →'}
@@ -362,19 +334,12 @@ function RSVPModal({ isOpen, onClose, event }) {
                 cursor: 'pointer',
                 transition: 'transform 0.15s ease, background 0.15s ease',
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-1px)';
-                e.currentTarget.style.background = '#ffe3ec';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.background = '#fce8ef';
-              }}
+              
             >
               Cancel
             </button>
           </div>
-        </form>
+        </div>
 
       </div>
     </div>
