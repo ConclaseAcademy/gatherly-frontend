@@ -42,13 +42,14 @@ function Signup() {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    const contactRegex = /^(\+234|0)\d{10}$/;
 
     if (!name.trim()) {
       toast.error('Please enter your full name');
       return;
     }
 
-    if (!contact.trim()) {
+    if (!contactRegex.test(contact)) {
       toast.error('Please enter your contact number');
       return;
     }
@@ -147,46 +148,44 @@ function Signup() {
           <div>
             <label style={labelStyle}>Contact</label>
             <input
-              type="text"
+              type="tel"
               value={contact}
               onChange={(e) => setContact(e.target.value)}
               placeholder="09134671010"
+              maxLength={15}
               style={inputStyle}
             />
           </div>
             
           <div>
             <label style={labelStyle}>Role</label>
-           {/* <select value={role}> onchange={e => setRole(e.target.value)}
-            <option>Organizer</option>
-            <option>Attendee</option>
-           </select> */}
+           
 
              <select
-    value={role}
-    onChange={(e) => setRole(e.target.value)}
-    style={{
-      width: "100%",
-      height: "55px",
-      padding: "0 16px",
-      border: "1px solid #d1d5db",
-      borderRadius: "16px",
-      backgroundColor: "#f8fafc",
-      color: "#111827",
-      fontSize: "16px",
-      outline: "none",
-      cursor: "pointer",
-      appearance: "none",
-      WebkitAppearance: "none",
-      backgroundPosition: "right 16px center",
-      backgroundSize: "18px",
-    }}
-  >
-    <option value="">Select your role</option>
-    <option value="Organizer">Organizer</option>
-    <option value="Attendee">Attendee</option>
-  </select>
-          </div>
+               value={role}
+               onChange={(e) => setRole(e.target.value)}
+               style={{
+                      width: "100%",
+                      height: "55px",
+                       padding: "0 16px",
+                      border: "1px solid #d1d5db",
+                      borderRadius: "16px",
+                     backgroundColor: "#f8fafc",
+                     color: "#111827",
+                      fontSize: "16px",
+                      outline: "none",
+                     cursor: "pointer",
+                     appearance: "none",
+                   WebkitAppearance: "none",
+                     backgroundPosition: "right 16px center",
+                    backgroundSize: "18px",
+                        }}
+                >
+                 <option value="">Select your role</option>
+                   <option value="Organizer">Organizer</option>
+                  <option value="Attendee">Attendee</option>
+                </select>
+            </div>
 
           <div>
             <label style={labelStyle}>Email Address</label>
