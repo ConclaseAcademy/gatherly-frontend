@@ -4,6 +4,8 @@ import Logo from '../components/Logo'
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; 
+import { FiEye, FiEyeOff } from "react-icons/fi";
+
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -119,10 +121,10 @@ function Login() {
         </div>
 
         <h2 style={{ fontSize: '24px', fontWeight: '700', color: '#5C0013', marginBottom: '6px' }}>
-          Organizer Login
+          Welcome Back!
         </h2>
         <p style={{ fontSize: '13px', color: '#888', marginBottom: '28px', lineHeight: '1.5' }}>
-          Enter your details to manage your events and check in attendees
+           Login to your accout to continue
         </p>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
@@ -139,7 +141,7 @@ function Login() {
 
           <div>
             <label style={labelStyle}>Password</label>
-            <div style={{display:"flex", alignItems:'center', gap:"10px"}}>
+            <div style={{display:"flex", alignItems:'center', gap:"10px", position: 'relative'}}>
               <input
               type="password"
               value={password}
@@ -147,26 +149,42 @@ function Login() {
               placeholder="Wealth1010"
               style={inputStyle}
             />
-             <button onClick={()=>hidePws()} type="button" style={{
-             
-            backgroundColor: 'gray',
-              border: 'none',
+            {showPassword ? (
+                <FiEye 
+             style={{
+              position: 'absolute',
+             right: '20px',
+              fontSize: '22px',
+              color:'#9ca3af',
               cursor: 'pointer',
-                color: 'white',
-              padding: '6px 12px',
-              borderRadius: '6px',
-              fontSize: '12px',
-            }}>
-              {showPassword ? "Hide" : "Show"}
-            </button>
+               }}
+                
+                onClick={() => setShowPassword(false)}
+                 />
+               ) : (
+               <FiEyeOff
+              style={{
+                position: 'absolute',
+               right: '20px',
+               fontSize: '22px',
+                 color:'#9ca3af',
+                 cursor: 'pointer',
+              }}
+             onClick={() => setShowPassword(true)}
+            />
+        )}
+             
             </div>
           </div>
-
-          <p className="forgot-password">
-             <Link to="/forgot-password">Forgot Password?</Link>
-           </p>
-
-          
+          <div
+              style={{
+              display: "flex",
+               justifyContent: "flex-end",
+              marginTop: "10px",
+             }}
+>
+                <Link to="/forgot-password" style={{ color: '#5C0013', fontWeight: '500', textDecoration: 'underline' }}>Forgot Password?</Link>
+            </div>
 
           <button type="submit" style={{
             width: '100%',

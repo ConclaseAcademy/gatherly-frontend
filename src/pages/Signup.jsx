@@ -4,6 +4,7 @@ import Logo from '../components/Logo'
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 
 function Signup() {
@@ -124,8 +125,8 @@ function Signup() {
           <Logo  page="auth"/>
         </div>
 
-        <h2 style={{ fontSize: '24px', fontWeight: '700', color: '#5C0013', marginBottom: '6px' }}>
-          Become an Organizer
+        <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#5C0013', marginBottom: '6px' }}>
+          Become an Organizer or Attendee
         </h2>
         <p style={{ fontSize: '13px', color: '#888', marginBottom: '28px', lineHeight: '1.5' }}>
           Enter your details to create an account with us
@@ -156,10 +157,35 @@ function Signup() {
             
           <div>
             <label style={labelStyle}>Role</label>
-           <select value={role}> onchange={e => setRole(e.target.value)}
+           {/* <select value={role}> onchange={e => setRole(e.target.value)}
             <option>Organizer</option>
             <option>Attendee</option>
-           </select>
+           </select> */}
+
+             <select
+    value={role}
+    onChange={(e) => setRole(e.target.value)}
+    style={{
+      width: "100%",
+      height: "55px",
+      padding: "0 16px",
+      border: "1px solid #d1d5db",
+      borderRadius: "16px",
+      backgroundColor: "#f8fafc",
+      color: "#111827",
+      fontSize: "16px",
+      outline: "none",
+      cursor: "pointer",
+      appearance: "none",
+      WebkitAppearance: "none",
+      backgroundPosition: "right 16px center",
+      backgroundSize: "18px",
+    }}
+  >
+    <option value="">Select your role</option>
+    <option value="Organizer">Organizer</option>
+    <option value="Attendee">Attendee</option>
+  </select>
           </div>
 
           <div>
@@ -175,7 +201,7 @@ function Signup() {
 
           <div>
             <label style={labelStyle}>Password</label>
-            <div style={{display:"flex", alignItems:'center', gap:"10px"}}>
+            <div style={{display:"flex", alignItems:'center', gap:"10px", position: "relative"}}>
                <input
               type={showPassword ? "text" : "password"}
               value={password}
@@ -183,18 +209,33 @@ function Signup() {
               placeholder="Wealth1010"
               style={inputStyle}
             />
-            <button onClick={()=>hidePws()} type="button" style={{
-             
-            backgroundColor: 'gray',
-              border: 'none',
-              cursor: 'pointer',
-                color: 'white',
-              padding: '6px 12px',
-              borderRadius: '6px',
-              fontSize: '12px',
-            }}>
-              {showPassword ? "Hide" : "Show"}
-            </button>
+             {showPassword ? (
+          <FiEye 
+             style={{
+              position:'absolute',
+              top:"50%",
+              right: '20px',
+               transform: 'translateY(-50%)',
+               fontSize: '22px',
+               color:'#9ca3af',
+               cursor: 'pointer',
+               }}
+            onClick={() => setShowPassword(false)}
+          />
+        ) : (
+          <FiEyeOff
+          style={{
+            position:'absolute',
+            top:"50%",
+             right: '20px',
+            transform: 'translateY(-50%)',
+            fontSize: '22px',
+             color:'#9ca3af',
+             cursor: 'pointer',
+          }}
+            onClick={() => setShowPassword(true)}
+          />
+        )}
            </div>
           </div>
 
