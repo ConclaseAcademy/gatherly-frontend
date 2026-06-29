@@ -4,21 +4,11 @@ const API = axios.create({
   baseURL: "http://20.25.50.191:5144/api",
 });
 
-const token = localStorage.getItem("token")
 
-// export const registerForEvent = async (eventId) => {
- 
-  
-//   await API.post(`/api/events/${eventId}/register`, {}, {
-//   headers: {
-//     Authorization: `Bearer ${token}`,
-//   },
-// });
-   
-//   return response.data;
-// };
 
 export const registerForEvent = async (eventId) => {
+
+  const token = localStorage.getItem("token")
   const response = await API.post(
     `/events/${eventId}/register`,
     {ticketType:'General'},
@@ -33,18 +23,6 @@ export const registerForEvent = async (eventId) => {
 };
 
 
-export const deleteEvent = (eventId) => {
-  const token = localStorage.getItem("token");
-
-  return axios.delete(
-    `http://20.25.50.191:5144/api/Events/${eventId}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-};
 
 export const cancelRegistration = async (registrationId) => {
   const response = await API.post(

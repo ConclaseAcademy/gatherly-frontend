@@ -19,20 +19,30 @@ function RSVPModal({ isOpen, onClose, event, onSuccess}) {
   if (!isOpen) return null;
 
  
-
-
- 
-  const handleRSVP = async () => {
+const handleRSVP = async () => {
   try {
-
-  const response=  await registerForEvent(event.eventId);
-  console.log(response)
+    const response = await registerForEvent(event.eventId);
+    console.log(response);
     alert("Successfully registered!");
   } catch (error) {
-    console.error(error);
-    alert("Registration failed");
+    console.log(error.response?.data);
+    console.log(error.response?.status);
+    alert(error.response?.data?.message || "Registration failed");
   }
 };
+
+ 
+//   const handleRSVP = async () => {
+//   try {
+
+//   const response=  await registerForEvent(event.eventId);
+//   console.log(response)
+//     alert("Successfully registered!");
+//   } catch (error) {
+//     console.error(error);
+//     alert("Registration failed");
+//   }
+// };
 
   
 
@@ -239,7 +249,7 @@ function RSVPModal({ isOpen, onClose, event, onSuccess}) {
             <span style={{ backgroundColor:"", padding:"6px", marginBlockStart:"-20px", borderRadius:"10%", display:"inline-block", color:"#E57591", marginBottom:"6px" }}>
                 <FaRegUser />
                </span>
-            Wealth
+             {event?.organizerName}
           </div>
 
           <div
@@ -255,7 +265,7 @@ function RSVPModal({ isOpen, onClose, event, onSuccess}) {
             <span style={{ backgroundColor:"", padding:"6px", marginBlockStart:"-20px", borderRadius:"10%", display:"inline-block", color:"#E57591", marginBottom:"6px" , display: "inline-flex", alignItems: "center"}}>
                <CiMail />
             </span> 
-            wealth@gmail.com
+             {event?.organizerEmail}
           </div>
         </div>
 
