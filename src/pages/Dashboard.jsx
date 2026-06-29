@@ -11,6 +11,10 @@ import CheckInModal from '../components/CheckInModal';
 import ShareEventModal from '../components/ShareEventModal';
 import TicketModal from '../components/TicketModal';
 import { getMyEvents } from '../api/Api';
+import { deleteEvent } from '../api/registrationApi';
+import { toast } from 'react-toastify';
+import useEventStore from '../store/eventStore';
+import useAuthStore from "../store/authStore";
 
 
 
@@ -33,21 +37,41 @@ const Dashboard = () => {
    const [ticketOpen, setTicketOpen] = useState(false);
     const [ticketEvent, setTicketEvent] = useState(null);
     const [attendee, setAttendee] = useState(null);
-   
-    const role= localStorage.getItem("role")
+   const role= localStorage.getItem("role")
 
-     const [eventData, setEventData] = useState([]);
-     useEffect(()=>{
-     getMyEvents().then((response)=>{
-      setEventData(response.data.data.items)
-      console.log(response)
-     }).catch((error)=>{
-      toast.error(error.data.messgae || "unable to load your event")
-      console.log(error)
-     })
-     },[])
 
+     const { user } = useAuthStore();
     
+
+     //const [eventData, setEventData] = useState([]);
+
+    const { events, loadEvents, deleteEventFromStore } = useEventStore();
+
+    //  useEffect(()=>{
+    //  getMyEvents().then((response)=>{
+    //   setEventData(response?.data?.data?.items)
+    //   console.log(response)
+    //  }).catch((error)=>{
+    //   toast.error(error.data.messgae || "unable to load your event")
+    //   console.log(error)
+    //  })
+    //  },[])
+
+    useEffect(() => {
+  loadEvents();
+}, []);
+
+     const handleDeleteEvent = async (eventId) => {
+  try {
+    await deleteEventFromStore(eventId);
+
+    toast.success("Event deleted successfully.");
+  } catch (error) {
+    toast.error(error.response?.data?.message || "Failed to delete event.");
+  }
+
+  setOpenMenuId(null);
+};
   
 
     return(
@@ -68,6 +92,8 @@ const Dashboard = () => {
         />
         <section className="dashboard-page">
              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '8px' }}>
+              <h2>Welcome, {user?.fullName}</h2>
+             
                <div>
                  <h1>My Events Dashboard</h1>
                 <p>
@@ -78,15 +104,15 @@ const Dashboard = () => {
                </div>
                
              </div>
-              <div className="dashboard-grid"> {eventData.map((event) => ( 
-                <div className="dashboard-card" key={event.id}> 
+              <div className="dashboard-grid"> {events.map((event) => ( 
+                <div className="dashboard-card" key={event.eventId}> 
                 <div className="card-banner"> 
                     <button
                       className="menu-btn"
                       aria-label="Open event menu"
-                      onClick={() => setOpenMenuId(openMenuId === event.id ? null : event.id)}
+                      onClick={() => setOpenMenuId(openMenuId === event.eventId ? null : event.eventId)}
                     >⋮</button>
-                    {openMenuId === event.id && (
+                    {openMenuId === event.eventId && (
                       <div className="dropdown-menu">
                         <button
                           type="button"
@@ -128,17 +154,41 @@ const Dashboard = () => {
                              </span> {event.venue}</p>
                     <p> <span style={{ backgroundColor:"white", padding:"6px", marginBlockStart:"-20px", borderRadius:"10%", display:"inline-block", color:"#E57591", marginBottom:"6px" }}>
                             <HiOutlineUsers />
-                             </span> {event.attendees} Attendees</p> 
+                             </span> {event.capacity} Attendees</p> 
                     <p> <span style={{ backgroundColor: "white", padding:"6px", marginBlockStart:"-20px", borderRadius:"10%", display:"inline-block", color:"#E57591", marginBottom:"6px" }}><IoTicketOutline /></span>
                     {event.price}</p> 
                 <div className="dashboard-actions"> 
                     <button className="checkin-btn" onClick={() => setCheckInEvent(event)}> Check-In Attendee </button>
-                    <button className="delete-btn" onClick={() => handleDeleteEvent(event.id)}> Delete Event </button>
+                    <button className="delete-btn" onClick={() => handleDeleteEvent(event.eventId)}> Delete Event </button>
                  </div>
                   </div> 
                   </div> 
                 ))} 
                 </div> 
+                 
+                <CreateEventModal
+  isOpen={modalOpen}
+  onClose={() => {
+    setModalOpen(false);
+    setEditingEvent(null);
+  }}
+  eventToEdit={editingEvent}
+  onSubmit={() => {
+    getMyEvents()
+      .then((response) => {
+        setEventData(response.data.data.items);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }}
+/>
+
+                <ShareEventModal
+                   isOpen={showshareEventModal}
+                    onClose={() => setShowShareEventModal(false)}
+                      event={shareEvent}
+                  />
                 </section> 
                 <Footer />
 

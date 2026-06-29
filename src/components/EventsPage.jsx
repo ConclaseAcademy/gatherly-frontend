@@ -30,15 +30,22 @@ const [capacity, setCapacity] = useState(null);
   };
 
     const [eventData, setEventData] = useState([]);
-     useEffect(()=>{
-     getEvents().then((response)=>{
-      setEventData(response.data.data.items)
-      console.log(response.data.data.items)
-     }).catch((error)=>{
-      toast.error(error.data.messgae || "unable to load your event")
-      console.log(error)
-     })
-     },[])
+     useEffect(() => {
+  getEvents()
+    .then((response) => {
+      const activeEvents = response.data.data.items.filter(
+        (event) => event.status !== "Cancelled"
+      );
+
+      setEventData(activeEvents);
+    })
+    .catch((error) => {
+      toast.error(
+        error.response?.data?.message || "Unable to load events"
+      );
+      console.log(error);
+    });
+}, []);
 
   const openRSVP = (event) => {
     setSelectedEvent(event);
@@ -67,7 +74,7 @@ const [capacity, setCapacity] = useState(null);
         <div className="events-list-grid">
 
           {eventData.map((event) => (
-            <div className="event-item" key={event.id}>
+            <div className="event-item" key={event.eventId}>
               <div className="event-item-banner">
                 <span style={{backgroundColor: '#FFD3DE', color: '#8D8A8A'}}>{event.category}</span>
               </div>
@@ -99,7 +106,7 @@ const [capacity, setCapacity] = useState(null);
                    {event.price}</p>
 
                 <div className="event-item-footer">
-                  <button className="spots-btn">{event.spots}</button>
+                  <button className="spots-btn">Slot {event.capacity - event.registeredCount}</button>
                   <button className="rsvp-btn" onClick={() => openRSVP(event)}>RSVP →</button>
                 </div>
               </div>

@@ -1,10 +1,12 @@
 import { PiShareNetworkLight } from "react-icons/pi";
 
 
-const ShareEventModal = ({ isOpen, onClose }) => {
+const ShareEventModal = ({ isOpen, onClose, event }) => {
   if (!isOpen) return null
 
-  const eventLink = 'https://your-event-link.com'
+  const eventLink = event
+  ? `http://localhost:5173/events/${event.id}`
+  : "";
 
   const copyLink = async () => {
     try {
@@ -18,9 +20,9 @@ const ShareEventModal = ({ isOpen, onClose }) => {
   const handleShare = async () => {
   if (navigator.share) {
     await navigator.share({
-      title: "Freshers Football Match",
-      text: "Check out this event!",
-      url: eventLink,
+      title: event?.title,
+      text: `Join me at ${event?.title}`,
+      url: eventLink, 
     });
   } else {
     navigator.clipboard.writeText(eventLink);
@@ -40,11 +42,11 @@ const ShareEventModal = ({ isOpen, onClose }) => {
         </p>
 
         <div className="event-preview">
-          <h3>Freshers Football Match</h3>
-          <p>
-            An upcoming match with Lasu year 1 students. Register to be part of the amazing team.
-          </p>
-          <small>Wednesday, May 17, 2026 • Lasu Football Pitch, Lagos</small>
+          <h3>{event?.title}</h3>
+          
+            <p>{event?.description}</p>
+
+          <small>{event?.date} • {event?.venue}</small>
         </div>
 
         <label>Event Link</label>
@@ -55,9 +57,9 @@ const ShareEventModal = ({ isOpen, onClose }) => {
 
         <label>Share Message</label>
         <div className="message-box">
-          <h3>Check out this event: Freshers Football Match</h3>
-          <p>📅 Wednesday, May 17, 2026 at 04:15 PM</p>
-          <p>📍 Lasu Football Pitch, Lagos</p>
+          <h3>Check out this event: {event?.title}</h3>
+          <p>📅 {event?.date} {event?.startTime && `at ${event.startTime}`}</p>
+          <p>📍 {event?.venue}</p>
           <p>RSVP here: <span style={{color: '#4C0114'}}> {eventLink}</span></p>
         </div>
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { createEvent } from '../api/Api'
+import { createEvent, updateEvent } from '../api/Api'
 import { toast } from 'react-toastify';
+import useAuthStore from "../store/authStore";
 
 const inputStyle = {
   width: '100%',
@@ -29,50 +30,51 @@ const rowStyle = {
 }
 
 function CreateEventModal({ isOpen, onClose, eventToEdit, onSubmit }) {
+  const { user } = useAuthStore();
   const [title, setTitle] = useState('graduation')
   const [description, setDescription] = useState('conclase graduation')
   const [datetime, setDatetime] = useState('12/21/2026')
   const [category, setCategory] = useState('Conference')
   const [location, setLocation] = useState('lagos')
-  const [organizerName, setOrganizerName] = useState('conclase')
-  const [organizerEmail, setOrganizerEmail] = useState('conclase@gmail.com')
   const [capacity, setCapacity] = useState('15')
   const [price, setPrice] = useState('100')
 
+
   const resetForm = () => {
     setTitle(''); setDescription(''); setDatetime(''); setCategory('Conference')
-    setLocation(''); setOrganizerName(''); setOrganizerEmail(''); setCapacity(''); setPrice('')
+    setLocation(''); setCapacity(''); setPrice('')
   }
 
-  useEffect(() => {
-    if (!isOpen) return
+ useEffect(() => {
+  if (!isOpen) return;
 
-    if (eventToEdit) {
-      setTitle(eventToEdit.title || '')
-      setDescription(eventToEdit.description || '')
-      setDatetime(eventToEdit.datetime || eventToEdit.date || '')
-      setCategory(eventToEdit.category || 'Conference')
-      setLocation(eventToEdit.location || '')
-      setOrganizerName(eventToEdit.organizerName || '')
-      setOrganizerEmail(eventToEdit.organizerEmail || '')
-      setCapacity(eventToEdit.attendees || '')
-      setPrice(eventToEdit.price || '')
-      return
-    }
-
-    resetForm()
-  }, [isOpen, eventToEdit])
+  if (eventToEdit) {
+    setTitle(eventToEdit.title || "");
+    setDescription(eventToEdit.description || "");
+    setDatetime(eventToEdit.date || "");
+    setCategory(eventToEdit.category || "Conference");
+    setLocation(eventToEdit.venue || "");
+    setCapacity(eventToEdit.capacity || "");
+    setPrice(eventToEdit.price || "");
+  } else {
+    resetForm();
+  }
+}, [isOpen, eventToEdit]);
 
  const handleSubmit = async (e) => {
   e.preventDefault();
 
-  const payload = {
+const payload = {
   title,
   category,
   venue: location,
-  date: datetime ? new Date(datetime).toISOString().split("T")[0] : "",
+  price: Number(price),
+  date: datetime
+    ? new Date(datetime).toISOString().split("T")[0]
+    : "",
   startTime: datetime
-    ? new Date(datetime).toLocaleTimeString([], {
+    ? new Date(datetime).toLocaleTimeString("en-US", {
+        hour12: false,
         hour: "2-digit",
         minute: "2-digit",
       })
@@ -80,13 +82,14 @@ function CreateEventModal({ isOpen, onClose, eventToEdit, onSubmit }) {
   endTime: datetime
     ? new Date(
         new Date(datetime).getTime() + 2 * 60 * 60 * 1000
-      ).toLocaleTimeString([], {
+      ).toLocaleTimeString("en-US", {
+        hour12: false,
         hour: "2-digit",
         minute: "2-digit",
       })
     : "",
   description,
-  capacity: Number(capacity) || 0,
+  capacity: Number(capacity),
   visibility: "Public",
   allowReEntry: true,
   vipEnabled: false,
@@ -94,19 +97,24 @@ function CreateEventModal({ isOpen, onClose, eventToEdit, onSubmit }) {
     ? new Date(datetime).toISOString()
     : "",
 };
-   createEvent(payload).then((response)=>{
-  toast.success(response.data.message);
-  }).catch((error)=>{
-   toast.error(error.data.message || "Unable to create event!")
-  })
+try {
+  if (eventToEdit) {
+    await updateEvent(eventToEdit.eventId, payload);
+    toast.success("Event updated successfully");
+  } else {
+    await createEvent(payload);
+    toast.success("Event created successfully");
+  }
 
-  
+  if (onSubmit) {
+    onSubmit();
+  }
 
-//   if (onSubmit) {
-//   onSubmit(payload);
-// }
   onClose();
-};
+} catch (error) {
+  toast.error(error.response?.data?.message || "Something went wrong");
+}
+ }
 
 const handleCancel = () => {
   resetForm();
@@ -160,7 +168,7 @@ if (!isOpen) return null;
         Fill in the details below to create a new event for attendees to discover and RSVP.
       </p>
 
-      {/* Form */}
+    
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
 
         <div>
@@ -206,11 +214,11 @@ if (!isOpen) return null;
         <div style={rowStyle}>
           <div>
             <label style={labelStyle}>Organizer Name</label>
-            <input value={organizerName} onChange={e => setOrganizerName(e.target.value)} placeholder="Wealth Happiness" style={inputStyle} />
+            <input value={user?.fullName || ""} style={inputStyle} />
           </div>
           <div>
             <label style={labelStyle}>Organizer Email</label>
-            <input type="email" value={organizerEmail} onChange={e => setOrganizerEmail(e.target.value)} placeholder="Wealth@gmail.com" style={inputStyle} />
+            <input type="email" value={user?.email || ""} style={inputStyle} />
           </div>
         </div>
 

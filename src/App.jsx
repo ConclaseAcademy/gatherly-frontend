@@ -8,9 +8,17 @@ import Dashboard from "./pages/Dashboard";
 import { ToastContainer } from 'react-toastify';
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import { useEffect } from "react";
+import useAuthStore from "./store/authStore";
 
 
 function App() {
+
+    const { loadUser, user } = useAuthStore();
+
+  useEffect(() => {
+    loadUser();
+  }, []);
     return (
         <>
            <ToastContainer
