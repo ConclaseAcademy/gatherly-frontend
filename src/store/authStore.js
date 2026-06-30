@@ -4,6 +4,17 @@ import { getMe } from "../api/Api";
 const useAuthStore = create((set) => ({
   user: null,
 
+  logout: () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
+
+  set({
+    user: null,
+    token: null,
+    isAuthenticated: false,
+  });
+  },
+
   loadUser: async () => {
   try {
     console.log("Loading user...");

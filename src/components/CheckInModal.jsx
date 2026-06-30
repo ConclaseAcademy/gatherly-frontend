@@ -1,30 +1,30 @@
 import { useState } from 'react'
+import { checkInAttendee } from "../api/registrationApi";
+import { toast } from "react-toastify";
 
-const initialAttendees = [
-  { id: 1, name: 'Wealth Happiness', ticket: 'TKT-1669502136936-9YTFCC', checkedIn: false },
-  { id: 2, name: 'Wealth Happiness', ticket: 'TKT-1669502136937-4XKPBB', checkedIn: false },
-  { id: 3, name: 'Wealth Happiness', ticket: 'TKT-1669502136938-2MNQAA', checkedIn: false },
-]
 
-function CheckInModal({ isOpen, onClose, eventTitle }) {
-  const [attendees, setAttendees] = useState(initialAttendees)
-  const [search, setSearch] = useState('')
 
-  const checkedInCount = attendees.filter(a => a.checkedIn).length
-  const leftCount = attendees.length - checkedInCount
+function CheckInModal({ isOpen, onClose, eventTitle, eventId }) {
+   const [registrationId, setRegistrationId] = useState("");
 
-  const filtered = attendees.filter(a =>
-    a.name.toLowerCase().includes(search.toLowerCase()) ||
-    a.ticket.toLowerCase().includes(search.toLowerCase())
-  )
+  const handleCheckIn = async () => {
+  try {
+    await checkInAttendee(eventId, registrationId);
 
-  const handleCheckIn = (id) => {
-    setAttendees(prev => prev.map(a => a.id === id ? { ...a, checkedIn: true } : a))
+    toast.success("Attendee checked in successfully!");
+
+    setRegistrationId("");
+
+    onClose();
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message || "Check-in failed"
+    );
   }
-
+};
+ 
   const handleClose = () => {
-    setAttendees(initialAttendees)
-    setSearch('')
+   setRegistrationId("");
     onClose()
   }
 
@@ -91,12 +91,12 @@ function CheckInModal({ isOpen, onClose, eventTitle }) {
         textAlign: 'center',
       }}>
         <div>
-          <p style={{ fontSize: '36px', fontWeight: '700', color: '#0E0D0D', margin: 0 }}>{checkedInCount}</p>
+          <p style={{ fontSize: '36px', fontWeight: '700', color: '#0E0D0D', margin: 0 }}>0</p>
           <p style={{ fontSize: '13px', color: '#aaa', marginTop: '4px' }}>Checked-In</p>
         </div>
         <div style={{ background: '#E57591', width: '1px' }} />
         <div>
-          <p style={{ fontSize: '36px', fontWeight: '700', color: '#0E0D0D', margin: 0 }}>{leftCount}</p>
+          <p style={{ fontSize: '36px', fontWeight: '700', color: '#0E0D0D', margin: 0 }}>0</p>
           <p style={{ fontSize: '13px', color: '#aaa', marginTop: '4px' }}>Left</p>
         </div>
       </div>
@@ -106,9 +106,9 @@ function CheckInModal({ isOpen, onClose, eventTitle }) {
         Ticket number or Email Address
       </p>
       <input
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-        placeholder="Wealth@gmail.com"
+        value={registrationId}
+        onChange={e => setRegistrationId(e.target.value)}
+        placeholder="Enter Registration ID"
         style={{
           width: '100%',
           padding: '13px 16px',
@@ -123,67 +123,25 @@ function CheckInModal({ isOpen, onClose, eventTitle }) {
         }}
       />
 
-      {/* Attendees List */}
-      <p style={{ fontSize: '14px', fontWeight: '700', color: '#0E0D0D', marginBottom: '12px' }}>
-        All Attendees ({attendees.length})
-      </p>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        {filtered.map(attendee => (
-          <div
-            key={attendee.id}
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              background: '#FFF0F4',
-              borderRadius: '10px',
-              padding: '14px 16px',
-            }}
-          >
-            <div>
-              <p style={{ fontWeight: '700', fontSize: '14px', color: '#0E0D0D', margin: 0 }}>{attendee.name}</p>
-              <p style={{ fontSize: '12px', color: '#888', margin: '3px 0 0' }}>{attendee.ticket}</p>
-            </div>
-
-            {attendee.checkedIn ? (
-              <span style={{
-                background: '#d4edda',
-                color: '#276749',
-                borderRadius: '6px',
-                padding: '8px 16px',
-                fontSize: '13px',
-                fontWeight: '600',
-              }}>
-                ✓ Done
-              </span>
-            ) : (
-              <button
-                onClick={() => handleCheckIn(attendee.id)}
-                style={{
-                  background: '#800020',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '6px',
-                  padding: '10px 18px',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  fontFamily: 'Poppins, sans-serif',
-                }}
-              >
-                Check-In
-              </button>
-            )}
-          </div>
-        ))}
-
-        {filtered.length === 0 && (
-          <p style={{ textAlign: 'center', color: '#aaa', fontSize: '14px', padding: '20px 0' }}>
-            No attendees match your search.
-          </p>
-        )}
-      </div>
+      <button
+  onClick={handleCheckIn}
+  style={{
+    width: "100%",
+    background: "#800020",
+    color: "#fff",
+    border: "none",
+    borderRadius: "10px",
+    padding: "14px",
+    marginTop: "20px",
+    cursor: "pointer",
+    fontWeight: "600",
+    fontFamily: "Poppins, sans-serif",
+  }}
+>
+  Check In Attendee
+</button>
+        
+      
     </div>
   </div>
   )

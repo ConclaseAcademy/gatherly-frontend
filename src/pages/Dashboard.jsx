@@ -11,7 +11,6 @@ import CheckInModal from '../components/CheckInModal';
 import ShareEventModal from '../components/ShareEventModal';
 import TicketModal from '../components/TicketModal';
 import { getMyEvents, deleteEvent } from '../api/Api';
-//import { deleteEvent } from '../api/registrationApi';
 import { toast } from 'react-toastify';
 import useEventStore from '../store/eventStore';
 import useAuthStore from "../store/authStore";
@@ -41,21 +40,8 @@ const Dashboard = () => {
 
 
      const { user } = useAuthStore();
-    
 
-     //const [eventData, setEventData] = useState([]);
-
-    const { events, loadEvents, deleteEventFromStore } = useEventStore();
-
-    //  useEffect(()=>{
-    //  getMyEvents().then((response)=>{
-    //   setEventData(response?.data?.data?.items)
-    //   console.log(response)
-    //  }).catch((error)=>{
-    //   toast.error(error.data.messgae || "unable to load your event")
-    //   console.log(error)
-    //  })
-    //  },[])
+    const { events, loadEvents, deleteEventFromStore, publishEventInStore, closeEventInStore, } = useEventStore();
 
     useEffect(() => {
   loadEvents();
@@ -73,6 +59,24 @@ const Dashboard = () => {
   setOpenMenuId(null);
 };
   
+
+   const handlePublish = async (eventId) => {
+  try {
+    await publishEventInStore(eventId);
+    toast.success("Event published successfully.");
+  } catch (error) {
+    toast.error(error.response?.data?.message || "Failed to publish event.");
+  }
+};
+
+const handleClose = async (eventId) => {
+  try {
+    await closeEventInStore(eventId);
+    toast.success("Event closed successfully.");
+  } catch (error) {
+    toast.error(error.response?.data?.message || "Failed to close event.");
+  }
+};
 
     return(
         <>
@@ -159,8 +163,34 @@ const Dashboard = () => {
                     {event.price}</p> 
                 <div className="dashboard-actions"> 
                     <button className="checkin-btn" onClick={() => setCheckInEvent(event)}> Check-In Attendee </button>
+                     {event.status !== "Published" && (
+                   <button 
+                   style={{
+                      background: "#800020",
+                       color: "#fff",
+                       border: "none",
+                      borderRadius: "10px",
+                    padding: "10px 16px",
+                     fontWeight: 600,
+                    cursor: "pointer",
+                    }}
+                    className="publish-btn"  onClick={() => handlePublish(event.eventId)} > Publish Event</button>)}
+                     {event.status === "Published" && (
+                   <button 
+                   style={{
+                     background: "#FCB8C9",
+                     color: "#4C0114",
+                     border: "1px solid #800020",
+                     borderRadius: "10px",
+                    padding: "10px 16px",
+                     fontWeight: 600,
+                     cursor: "pointer",
+                      }}
+                   className="close-event-btn"onClick={() => handleClose(event.eventId)} > Close Event</button> )}
+
                     <button className="delete-btn" onClick={() => handleDeleteEvent(event.eventId)}> Delete Event </button>
                  </div>
+
                   </div> 
                   </div> 
                 ))} 
@@ -183,6 +213,13 @@ const Dashboard = () => {
       });
   }}
 />
+
+              <CheckInModal
+                isOpen={!!checkInEvent}
+                onClose={() => setCheckInEvent(null)}
+                 eventTitle={checkInEvent?.title}
+                  eventId={checkInEvent?.eventId}
+                  />
 
                 <ShareEventModal
                    isOpen={showshareEventModal}

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { getMyEvents, deleteEvent } from "../api/Api";
+import { getMyEvents, deleteEvent, publishEvent, closeEvent } from "../api/Api";
 
 const useEventStore = create((set) => ({
   events: [],
@@ -32,6 +32,31 @@ const useEventStore = create((set) => ({
   }));
 },
 
+
+    publishEventInStore: async (eventId) => {
+    await publishEvent(eventId);
+
+    set((state) => ({
+      events: state.events.map((event) =>
+        event.eventId === eventId
+          ? { ...event, status: "Published" }
+          : event
+      ),
+    }));
+  },
+
+  closeEventInStore: async (eventId) => {
+    await closeEvent(eventId);
+
+    set((state) => ({
+      events: state.events.map((event) =>
+        event.eventId === eventId
+          ? { ...event, status: "Closed" }
+          : event
+      ),
+    }));
+  },
+  
   addEvent: (event) =>
     set((state) => ({
       events: [event, ...state.events],
@@ -46,5 +71,7 @@ const useEventStore = create((set) => ({
       ),
     })),
 }));
+
+
 
 export default useEventStore;

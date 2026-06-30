@@ -72,19 +72,7 @@ export const deleteEvent = (eventId) => {
   });
 };
 
-export const closeEvent = (eventId, data) => {
-  const token = localStorage.getItem("token");
 
-  return axios.put(
-    `${API_URL}/Events/${eventId}`,
-    data,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-};
 
 export const getEvents = () => {
   return axios.get(
@@ -139,4 +127,32 @@ export const getMe = () => {
       Authorization: `Bearer ${token}`,
     },
   });
+};
+
+export const publishEvent = (eventId) => {
+  const token = localStorage.getItem("token");
+
+  return axios.patch(
+    `${API_URL}/Events/${eventId}/publish`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
+
+export const closeEvent = (eventId) => {
+  const token = localStorage.getItem("token");
+
+  return axios.patch(
+    `${API_URL}/Events/${eventId}/close`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 };

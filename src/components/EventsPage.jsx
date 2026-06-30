@@ -17,8 +17,8 @@ const EventsPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [ticketOpen, setTicketOpen] = useState(false);
-const [capacity, setCapacity] = useState(null);
-  
+  const [capacity, setCapacity] = useState(null);
+  const [ticketData, setTicketData] = useState(null);
 
   const loadEvents = async () => {
     try {
@@ -106,7 +106,11 @@ const [capacity, setCapacity] = useState(null);
                    {event.price}</p>
 
                 <div className="event-item-footer">
-                  <button className="spots-btn">Slot {event.capacity - event.registeredCount}</button>
+                  <button className="spots-btn">
+                  {event.capacity === event.registeredCount? "Sold Out"
+                  : `${event.capacity - event.registeredCount} Slots Left`}
+                </button>
+                 {/* <button className="spots-btn">Slot {event.capacity - event.registeredCount}</button> */}
                   <button className="rsvp-btn" onClick={() => openRSVP(event)}>RSVP →</button>
                 </div>
               </div>
@@ -114,20 +118,29 @@ const [capacity, setCapacity] = useState(null);
           ))}
         </div>
       </section>
+        
 
-      
+        <RSVPModal
+           isOpen={modalOpen}
+           onClose={() => setModalOpen(false)}
+           event={selectedEvent}
+          onSuccess={({ event, attendee }) => {
+         console.log("Ticket received:", attendee);
 
-      <RSVPModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        event={selectedEvent}
+        setSelectedEvent(event);
+        setTicketData(attendee);
+       setTicketOpen(true);
+
+       loadEvents();
+       }}
       />
+      
 
       <TicketModal
   isOpen={ticketOpen}
   onClose={() => setTicketOpen(false)}
   event={selectedEvent}
-  attendee={capacity}
+  attendee={ticketData}
 />
 
       <CTA />

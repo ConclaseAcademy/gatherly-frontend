@@ -9,7 +9,7 @@ import { CiMail } from "react-icons/ci";
 import { registerForEvent } from "../api/registrationApi";
 
 
-function RSVPModal({ isOpen, onClose, event, onSuccess}) {
+function RSVPModal({ isOpen, onClose, event, onSuccess, }) {
   const navigate = useNavigate();
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -19,30 +19,42 @@ function RSVPModal({ isOpen, onClose, event, onSuccess}) {
   if (!isOpen) return null;
 
  
+
+
 const handleRSVP = async () => {
   try {
-    const response = await registerForEvent(event.eventId);
-    console.log(response);
-    alert("Successfully registered!");
+    const response = await registerForEvent(
+      event.eventId,
+      name,
+      email
+    );
+
+    console.log("Registration Response:",response);
+
+    setSubmitted(true);
+    
+    console.log("onSuccess prop:", onSuccess);
+
+    onSuccess({
+      
+      event,
+      attendee: {
+        name,
+        email,
+        accessCode: response.data.accessCode,
+        registrationId: response.data.registrationId,
+        ticketType: response.data.ticketType,
+        status: response.data.status,
+      },
+    });
+
+    onClose();
   } catch (error) {
     console.log(error.response?.data);
-    console.log(error.response?.status);
     alert(error.response?.data?.message || "Registration failed");
   }
 };
-
  
-//   const handleRSVP = async () => {
-//   try {
-
-//   const response=  await registerForEvent(event.eventId);
-//   console.log(response)
-//     alert("Successfully registered!");
-//   } catch (error) {
-//     console.error(error);
-//     alert("Registration failed");
-//   }
-// };
 
   
 

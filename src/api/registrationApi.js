@@ -6,12 +6,22 @@ const API = axios.create({
 
 
 
-export const registerForEvent = async (eventId) => {
 
-  const token = localStorage.getItem("token")
+export const registerForEvent = async (
+  eventId,
+  guestName,
+  guestEmail
+) => {
+  const token = localStorage.getItem("token");
+
   const response = await API.post(
     `/events/${eventId}/register`,
-    {ticketType:'General'},
+    {
+      ticketType: "General",
+      guestName,
+      guestEmail,
+      paymentToken: "tok_render",
+    },
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -21,7 +31,6 @@ export const registerForEvent = async (eventId) => {
 
   return response.data;
 };
-
 
 
 export const cancelRegistration = async (registrationId) => {
@@ -46,9 +55,20 @@ export const getMyRegistrations = async () => {
 };
 
 
-export const checkInAttendee = async (eventId) => {
+export const checkInAttendee = async (eventId, registrationId) => {
+  const token = localStorage.getItem("token");
+
   const response = await API.post(
-    `/events/${eventId}/check-in`
+    `/events/${eventId}/check-in`,
+    {
+      registrationId,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
   );
+
   return response.data;
 };

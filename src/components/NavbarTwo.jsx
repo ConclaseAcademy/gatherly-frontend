@@ -4,14 +4,24 @@ import { BsCalendarDateFill } from "react-icons/bs";
 import { PiCirclesFour } from "react-icons/pi";
 import { FiLogOut } from "react-icons/fi";
 import { getMyEvents } from '../api/Api';
+import useAuthStore from "../store/authStore";
+
+
 
 
 
 
 
 const NavbarTwo = ({ onCreateClick }) => {
+  
+const { logout } = useAuthStore();
   const navigate = useNavigate();
 const role= localStorage.getItem("role")
+
+const handleLogout = () => {
+  logout();
+  navigate("/login");
+};
   return (
     <nav className="navbar navbar-two">
       <div className="logo-wrap">
@@ -27,7 +37,7 @@ const role= localStorage.getItem("role")
         <span className="nav-link-icon"><PiCirclesFour /></span>
           My Events
         </Link>
-        <button className="logout-btn" onClick={() => navigate("/login")}>
+        <button className="logout-btn" onClick={handleLogout}>
           <span className="nav-link-icon"><FiLogOut /></span>
           Logout
         </button>

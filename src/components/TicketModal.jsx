@@ -9,8 +9,10 @@ import { CiMail } from "react-icons/ci";
 const TicketModal = ({ isOpen, onClose, event, attendee }) => {
   if (!isOpen) return null;
 
-  const ticketCode = `TKT-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
-
+  // const ticketCode = `TKT-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+  
+  const ticketCode = attendee?.accessCode;
+  
   const handleDownload = () => {
     const content = [
       "Event Ticket",
@@ -154,7 +156,7 @@ const TicketModal = ({ isOpen, onClose, event, attendee }) => {
                  Date & Time
               </div>
              
-              <div style={{ fontSize: "13px", color: '#666', lineHeight: '23px', marginLeft: '15px' }}>{event?.startTime}</div>
+              <div style={{ fontSize: "13px", color: '#666', lineHeight: '23px', marginLeft: '15px' }}>{event?.date} • {event?.startTime}</div>
             </div>
 
             <div>
@@ -191,10 +193,10 @@ const TicketModal = ({ isOpen, onClose, event, attendee }) => {
                  Capacity
               </div>
               <div style={{ fontWeight: 600, fontSize: "13px", color: '#666', lineHeight: '23px', marginLeft: '15px' }}>
-                {event?.capacity ? `${event.capacity} Registered` : "39/100 Registered"}
+                {event?.registeredCount}/{event?.capacity} Registered
               </div>
               <div style={{ fontSize: "13px", color: "#666", lineHeight: '23px', marginLeft: '15px' }}>
-                {event?.spots || "61 spots left"}
+                {event.capacity - event.registeredCount} Spots Left
               </div>
             </div>
 
