@@ -1,3 +1,36 @@
+# Gatherly Frontend — Client Application Microservice
+
+This directory contains the independent, single-page client application (SPA) for the Gatherly platform. Built using **React** and bundled via **Vite**, this microservice delivers a highly responsive UI/UX for event exploration, management dashboard tracking, and real-time ticketing checkouts.
+
+---
+
+## 🏗️ Architectural Pattern: Gateway Proxy Alignment
+
+To circumvent the common limitation where client-side JavaScript applications cannot read native server host environments at runtime, this application employs a **Relative Gateway Routing Pattern**.
+
+Instead of hardcoding absolute cloud server domains (e.g., `https://api.gatherly.com`) into the code logic, the application uses relative network mapping:
+* **Base API Entry Route:** `/api/v1`
+
+When running locally under Docker Compose or in our Azure Cloud Staging/Production environments, an **Nginx Reverse Proxy Gateway** intercepts these relative routes and shifts the traffic seamlessly across an isolated private bridge network directly into the backend service container.
+
+---
+
+## 🛠️ Local Development Setup
+
+Follow these steps if you want to develop or run the frontend service independently on your machine (e.g., your MacBook Air) without spinning up the entire backend container stack.
+
+### Prerequisites
+* **Node.js:** v20.x (Active LTS recommended)
+* **Package Manager:** `npm` (packaged alongside Node)
+
+### 1. Install Dependencies
+Navigate into the frontend microservice directory and pull down the verified package modules:
+```bash
+cd frontend
+npm ci --quiet
+
+```
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
