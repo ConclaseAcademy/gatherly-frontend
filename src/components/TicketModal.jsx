@@ -304,7 +304,7 @@ const TicketModal = ({ isOpen, onClose, event, attendee }) => {
               <span style={{ backgroundColor:"", padding:"6px", marginBlockStart:"-20px", borderRadius:"10%", display:"inline-block", color:"#E57591", marginBottom:"6px" }}>
                 <FaRegUser />
                </span>
-             Wealth{/* ? {event?.organizerName || "Wealth"} */}
+             Wealth {/* ? {event?.organizerName || "Wealth"} */}
             </div>
             <div style={{ fontSize: "13px", color: "#666" }}>
               <span style={{ backgroundColor:"", padding:"6px", marginBlockStart:"-20px", borderRadius:"10%", display:"inline-block", color:"#E57591", marginBottom:"6px" , display: "inline-flex", alignItems: "center"}}>
