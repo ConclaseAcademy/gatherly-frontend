@@ -5,6 +5,7 @@ import { IoTicketOutline } from "react-icons/io5";
 import { HiOutlineUsers } from "react-icons/hi2";
 import { CiLocationOn } from "react-icons/ci";
 import { BsCalendarDateFill } from "react-icons/bs";
+import { formatDisplayTime } from '../utils/formatTime';
 import NavbarTwo from '../components/NavbarTwo';
 import CreateEventModal from '../components/CreateEventModal';
 import CheckInModal from '../components/CheckInModal';
@@ -156,7 +157,7 @@ const handleClose = async (eventId) => {
                      
                     <p> <span style={{ backgroundColor:"white", padding:"6px", marginBlockStart:"-20px", borderRadius:"10%", display:"inline-block", color:"#E57591", marginBottom:"6px" }}>
                             <BsCalendarDateFill />
-                             </span> {event.date} &nbsp; {event.startTime}</p> 
+                             </span> {event.date} &nbsp; {formatDisplayTime(event.startTime)}</p> 
                     <p> <span style={{ backgroundColor:"white", padding:"6px", marginBlockStart:"-20px", borderRadius:"10%", display:"inline-block", color:"#E57591", marginBottom:"6px" }}>
                             <CiLocationOn />
                              </span> {event.venue}</p>

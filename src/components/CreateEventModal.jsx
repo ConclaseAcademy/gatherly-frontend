@@ -3,6 +3,7 @@ import { createEvent, updateEvent } from '../api/Api'
 import { toast } from 'react-toastify';
 import useAuthStore from "../store/authStore";
 import useLoaderStore from '../store/useLoaderStore';
+import { formatDisplayTime } from '../utils/formatTime';
 
 const inputStyle = {
   width: '100%',
@@ -77,20 +78,22 @@ const payload = {
     ? new Date(datetime).toISOString().split("T")[0]
     : "",
   startTime: datetime
-    ? new Date(datetime).toLocaleTimeString("en-US", {
-        hour12: false,
-        hour: "2-digit",
-        minute: "2-digit",
-      })
+    ? formatDisplayTime(
+        new Date(datetime).toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })
+      )
     : "",
   endTime: datetime
-    ? new Date(
-        new Date(datetime).getTime() + 2 * 60 * 60 * 1000
-      ).toLocaleTimeString("en-US", {
-        hour12: false,
-        hour: "2-digit",
-        minute: "2-digit",
-      })
+    ? formatDisplayTime(
+        new Date(new Date(datetime).getTime() + 2 * 60 * 60 * 1000).toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })
+      )
     : "",
   description,
   capacity: Number(capacity),

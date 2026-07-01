@@ -1,5 +1,5 @@
 import { PiShareNetworkLight } from "react-icons/pi";
-
+import { formatDisplayTime } from '../utils/formatTime';
 
 const ShareEventModal = ({ isOpen, onClose, event }) => {
   if (!isOpen) return null
@@ -58,7 +58,7 @@ const ShareEventModal = ({ isOpen, onClose, event }) => {
         <label>Share Message</label>
         <div className="message-box">
           <h3>Check out this event: {event?.title}</h3>
-          <p>📅 {event?.date} {event?.startTime && `at ${event.startTime}`}</p>
+          <p>📅 {event?.date} {event?.startTime && `at ${formatDisplayTime(event.startTime)}`}</p>
           <p>📍 {event?.venue}</p>
           <p>RSVP here: <span style={{color: '#4C0114'}}> {eventLink}</span></p>
         </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import { BsCalendarDateFill } from 'react-icons/bs';
+import { formatDisplayTime } from '../utils/formatTime';
 import { IoTicketOutline } from 'react-icons/io5';
 import { HiOutlineUsers } from 'react-icons/hi2';
 import { CiLocationOn } from 'react-icons/ci';
@@ -156,7 +157,7 @@ const TicketModal = ({ isOpen, onClose, event, attendee }) => {
                  Date & Time
               </div>
              
-              <div style={{ fontSize: "13px", color: '#666', lineHeight: '23px', marginLeft: '15px' }}>{event?.date} • {event?.startTime}</div>
+              <div style={{ fontSize: "13px", color: '#666', lineHeight: '23px', marginLeft: '15px' }}>{event?.date} • {formatDisplayTime(event?.startTime)}</div>
             </div>
 
             <div>

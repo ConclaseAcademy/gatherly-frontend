@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BsCalendarDateFill } from 'react-icons/bs';
+import { formatDisplayTime } from '../utils/formatTime';
 import { IoTicketOutline } from 'react-icons/io5';
 import { HiOutlineUsers } from 'react-icons/hi2';
 import { CiLocationOn } from 'react-icons/ci';
@@ -197,7 +198,7 @@ const handleRSVP = async () => {
               </span>
              Date & Time
             </div>
-            <div style={{ color: '#666', lineHeight: '23px', marginLeft: '15px' }}>{event.date} &nbsp; {event.startTime}</div>
+            <div style={{ color: '#666', lineHeight: '23px', marginLeft: '15px' }}>{event.date} &nbsp; {formatDisplayTime(event.startTime)}</div>
           </div>
 
           <div style={{ background: '#fff7fa', border: '1px solid #ffe2eb', borderRadius: '12px', padding: '10px' }}>

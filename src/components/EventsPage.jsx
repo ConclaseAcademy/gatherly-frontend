@@ -7,6 +7,7 @@ import { IoTicketOutline } from 'react-icons/io5';
 import { HiOutlineUsers } from 'react-icons/hi2';
 import { CiLocationOn } from 'react-icons/ci';
 import RSVPModal from '../components/RSVPModal';
+import { formatDisplayTime } from '../utils/formatTime';
 import TicketModal from '../components/TicketModal';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -117,7 +118,7 @@ const EventsPage = () => {
                   <span style={{ backgroundColor:"white", padding:"6px", marginBlockStart:"-20px", borderRadius:"10%", display:"inline-block", color:"#E57591", marginBottom:"6px" }}>
                     <BsCalendarDateFill />
                  </span>
-                   {event.date} • {event.startTime}
+                   {event.date} • {formatDisplayTime(event.startTime)}
                 </p>
 
                 <p>
