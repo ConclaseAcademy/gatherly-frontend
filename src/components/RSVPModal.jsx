@@ -261,7 +261,7 @@ const handleRSVP = async () => {
             <span style={{ backgroundColor:"", padding:"6px", marginBlockStart:"-20px", borderRadius:"10%", display:"inline-block", color:"#E57591", marginBottom:"6px" }}>
                 <FaRegUser />
                </span>
-             {event?.organizerName}
+             {/* {event?.organizerName} */} Wealth
           </div>
 
           <div
@@ -277,7 +277,7 @@ const handleRSVP = async () => {
             <span style={{ backgroundColor:"", padding:"6px", marginBlockStart:"-20px", borderRadius:"10%", display:"inline-block", color:"#E57591", marginBottom:"6px" , display: "inline-flex", alignItems: "center"}}>
                <CiMail />
             </span> 
-             {event?.organizerEmail}
+             {/* {event?.organizerEmail} */} Wealth@gmail.com
           </div>
         </div>
 

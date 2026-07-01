@@ -296,7 +296,7 @@ const TicketModal = ({ isOpen, onClose, event, attendee }) => {
               <div>
                 <div style={{ color: "#777", fontSize: "11px", lineHeight: '23px', }}>Attendee</div>
                 <div style={{ fontWeight: 600, fontSize: "13px", lineHeight: '23px', }}>
-                  {attendee?.name || "Wealth Happiness"}
+                Wealth  {/* {attendee?.name || "Wealth Happiness"} */}
                 </div>
               </div>
 
@@ -305,7 +305,7 @@ const TicketModal = ({ isOpen, onClose, event, attendee }) => {
                   Email Address
                 </div>
                 <div style={{ fontWeight: 600, fontSize: "13px", lineHeight: '23px', }}>
-                  {attendee?.email || "Wealth@gmail.com"}
+                Wealth@gmail.com  {/* {attendee?.email || "Wealth@gmail.com"} */}
                 </div>
               </div>
             </div>

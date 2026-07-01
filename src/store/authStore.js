@@ -16,20 +16,18 @@ const useAuthStore = create((set) => ({
   },
 
   loadUser: async () => {
+  const token = localStorage.getItem("token");
+
+  if (!token) return;
+
   try {
-    console.log("Loading user...");
-
     const response = await getMe();
-
-    console.log("Full Response:", response);
 
     set({
       user: response.data.data,
     });
-
-    console.log("Stored User:", response.data.data);
   } catch (error) {
-    console.log("Error:", error);
+    console.log(error);
   }
 },
 }));

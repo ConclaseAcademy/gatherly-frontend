@@ -6,9 +6,7 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      {/* <h2 onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-        Gather<span style={{ color: '#E57591' }}>ly</span>
-      </h2> */}
+     
      <Logo/>
 
       <div className="nav-btns">

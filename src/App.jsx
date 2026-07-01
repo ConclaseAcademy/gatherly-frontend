@@ -10,6 +10,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import { useEffect } from "react";
 import useAuthStore from "./store/authStore";
+import Loader from "./components/Loader";
 
 
 function App() {
@@ -17,8 +18,12 @@ function App() {
     const { loadUser, user } = useAuthStore();
 
   useEffect(() => {
+  const token = localStorage.getItem("token");
+
+  if (token) {
     loadUser();
-  }, []);
+  }
+}, []);
     return (
         <>
            <ToastContainer
@@ -34,6 +39,7 @@ pauseOnHover
 theme="light"
 
 />
+ <Loader />
            <Routes>
             <Route path="/" element={<Home />} />
             <Route path="events" element={<EventsPage />} />

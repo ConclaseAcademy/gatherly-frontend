@@ -19,6 +19,7 @@ const EventsPage = () => {
   const [ticketOpen, setTicketOpen] = useState(false);
   const [capacity, setCapacity] = useState(null);
   const [ticketData, setTicketData] = useState(null);
+  
 
   const loadEvents = async () => {
     try {
@@ -29,6 +30,8 @@ const EventsPage = () => {
     }
   };
 
+     const [category, setCategory] = useState("All")
+     const [search, setSearch] = useState("")
     const [eventData, setEventData] = useState([]);
      useEffect(() => {
   getEvents()
@@ -36,7 +39,7 @@ const EventsPage = () => {
       const activeEvents = response.data.data.items.filter(
         (event) => event.status !== "Cancelled"
       );
-
+     
       setEventData(activeEvents);
     })
     .catch((error) => {
@@ -46,6 +49,17 @@ const EventsPage = () => {
       console.log(error);
     });
 }, []);
+
+    const filteredEvents = eventData.filter((event) => {
+  const matchesSearch = event.title
+    .toLowerCase()
+    .includes(search.toLowerCase());
+
+  const matchesCategory =
+    category === "All" || event.category === category;
+
+  return matchesSearch && matchesCategory;
+});
 
   const openRSVP = (event) => {
     setSelectedEvent(event);
@@ -60,20 +74,32 @@ const EventsPage = () => {
         <h1>Discover & Create Events</h1>
 
         <div className="search-filter">
-          <input type="text"  placeholder="Search Events..."/>
+          <input type="text" 
+          placeholder="Search Events..." 
+          value={search}
+          onChange={(e) => setSearch(e.target.value)} />
 
-          <select>
-            <option>All</option>
-            <option>Sport</option>
-            <option>Workshop</option>
-            <option>Conference</option>
-          </select> 
+          
+
+          <select
+           value={category}
+          onChange={(e) => setCategory(e.target.value)}
+           >
+       <option value="All">All</option>
+       <option value="Conference">Conference</option>
+       <option value="Meetup">Meetup</option>
+      <option value="Workshop">Workshop</option>
+      <option value="Concert">Concert</option>
+      <option value="Graduation">Graduation</option>
+      <option value="Sports">Sports</option>
+       <option value="Others">Others</option>
+      </select>
           <p>{eventData.length} Events Found</p>
         </div>
 
         <div className="events-list-grid">
 
-          {eventData.map((event) => (
+          {filteredEvents.map((event) => (
             <div className="event-item" key={event.eventId}>
               <div className="event-item-banner">
                 <span style={{backgroundColor: '#FFD3DE', color: '#8D8A8A'}}>{event.category}</span>

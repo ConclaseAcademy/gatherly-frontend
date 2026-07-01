@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; 
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import useLoaderStore from "../store/useLoaderStore";
 
 
 function Login() {
@@ -12,6 +13,7 @@ function Login() {
   const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const { showLoader, hideLoader } = useLoaderStore();
   const API_BASE_URL = 'http://20.25.50.191:5144';
   const inputStyle = {
     width: '100%',
@@ -48,6 +50,8 @@ function Login() {
     }
 
     try {
+          showLoader();
+
       const response = await axios.post(`${API_BASE_URL}/api/Auth/login`, {
         identifier: email.trim(),
         password,
@@ -91,7 +95,11 @@ function Login() {
         'Login failed. Please check your credentials and try again.'
       );
     }
+    finally {
+  hideLoader();
+}
   };
+  
 
   const hidePws = () => {
 

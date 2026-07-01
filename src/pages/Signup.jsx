@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import useLoaderStore from "../store/useLoaderStore";
 
 
 function Signup() {
@@ -15,6 +16,7 @@ function Signup() {
   const [password, setPassword] = useState('')
 
   const [showPassword, setShowPassword] = useState(false);
+  const { showLoader, hideLoader } = useLoaderStore();
   const API_BASE_URL = 'http://20.25.50.191:5144';
 
   const navigate = useNavigate();
@@ -67,6 +69,7 @@ function Signup() {
     }
 
     try {
+      showLoader();
       const payload = {
         fullName: name.trim(),
         phone: contact.trim(),
@@ -96,6 +99,9 @@ function Signup() {
         error.response?.data?.error ||
         'Signup failed. Please check your details and try again.'
       );
+    }
+    finally {
+      hideLoader();
     }
   };
 

@@ -9,6 +9,11 @@ function CheckInModal({ isOpen, onClose, eventTitle, eventId }) {
 
   const handleCheckIn = async () => {
   try {
+
+    console.log({
+  eventId,
+  registrationId,
+});
     await checkInAttendee(eventId, registrationId);
 
     toast.success("Attendee checked in successfully!");
@@ -17,6 +22,9 @@ function CheckInModal({ isOpen, onClose, eventTitle, eventId }) {
 
     onClose();
   } catch (error) {
+    console.log("Full error:", error);
+  console.log("Response:", error.response);
+  console.log("Data:", error.response?.data);
     toast.error(
       error.response?.data?.message || "Check-in failed"
     );
@@ -103,7 +111,7 @@ function CheckInModal({ isOpen, onClose, eventTitle, eventId }) {
 
       {/* Search */}
       <p style={{ fontSize: '12px', color: '#555', fontWeight: '500', marginBottom: '8px' }}>
-        Ticket number or Email Address
+        Registration ID
       </p>
       <input
         value={registrationId}
