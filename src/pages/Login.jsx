@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; 
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import useLoaderStore from "../store/useLoaderStore";
-
+import useAuthStore from "../store/authStore";
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -14,6 +14,7 @@ function Login() {
     const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { showLoader, hideLoader } = useLoaderStore();
+  const { setAuth, loadUser } = useAuthStore();
   const API_BASE_URL = 'http://20.25.50.191:5144';
   const inputStyle = {
     width: '100%',
@@ -59,11 +60,11 @@ function Login() {
 
       const payload = response.data?.data || response.data;
       const token = payload?.accessToken || payload?.token || payload?.jwt;
-      const role = response?.data?.data?.user?.role;
+      const role = payload?.user?.role || payload?.role || response?.data?.data?.user?.role;
       if (role) {
         localStorage.setItem('role', role);
       }
-     console.log(response)
+
       if (token) {
         localStorage.setItem('token', token);
       }
@@ -71,6 +72,9 @@ function Login() {
       if (payload?.refreshToken) {
         localStorage.setItem('refreshToken', payload.refreshToken);
       }
+
+      setAuth(payload?.user || null, token);
+      await loadUser();
 
       toast.success('Login Successful!', {
         position: 'top-right',

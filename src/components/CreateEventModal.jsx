@@ -33,6 +33,8 @@ const rowStyle = {
 function CreateEventModal({ isOpen, onClose, eventToEdit, onSubmit }) {
   const { user } = useAuthStore();
   const { showLoader, hideLoader } = useLoaderStore();
+  const organizerName = user?.fullName || user?.name || user?.full_name || "";
+  const organizerEmail = user?.email || user?.emailAddress || "";
   const [title, setTitle] = useState('graduation')
   const [description, setDescription] = useState('conclase graduation')
   const [datetime, setDatetime] = useState('12/21/2026')
@@ -219,11 +221,11 @@ if (!isOpen) return null;
         <div style={rowStyle}>
           <div>
             <label style={labelStyle}>Organizer Name</label>
-            <input value={user?.fullName || ""} style={inputStyle} />
+            <input value={organizerName} readOnly style={inputStyle} />
           </div>
           <div>
             <label style={labelStyle}>Organizer Email</label>
-            <input type="email" value={user?.email || ""} style={inputStyle} />
+            <input type="email" value={organizerEmail} readOnly style={inputStyle} />
           </div>
         </div>
 
@@ -234,7 +236,7 @@ if (!isOpen) return null;
           </div>
           <div>
             <label style={labelStyle}>Price (₦)</label>
-            <input value={price} onChange={e => setPrice(e.target.value)} placeholder="Free" style={inputStyle} />
+            <input value={price} onChange={e => setPrice(e.target.value)} placeholder="00.00" style={inputStyle} />
           </div>
         </div>
 
