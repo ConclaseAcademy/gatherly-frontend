@@ -96,8 +96,7 @@ const handleClose = async (eventId) => {
         />
         <section className="dashboard-page">
              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '8px' }}>
-              <h2>Welcome, {user?.fullName}</h2>
-               <br></br>
+            
                <div>
                  <h1>My Events Dashboard</h1>
                 <p>
