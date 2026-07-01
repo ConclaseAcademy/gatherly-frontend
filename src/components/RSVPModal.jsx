@@ -25,26 +25,44 @@ function RSVPModal({ isOpen, onClose, event, onSuccess, }) {
 
 
 const handleRSVP = async () => {
+  const trimmedName = name.trim();
+  const trimmedEmail = email.trim();
+
+  if (!trimmedName) {
+    alert("Please enter your full name.");
+    return;
+  }
+
+  if (!trimmedEmail) {
+    alert("Please enter your email address.");
+    return;
+  }
+
+  const emailPattern = /^\S+@\S+\.\S+$/;
+  if (!emailPattern.test(trimmedEmail)) {
+    alert("Please enter a valid email address.");
+    return;
+  }
+
   showLoader();
   try {
     const response = await registerForEvent(
       event.eventId,
-      name,
-      email
+      trimmedName,
+      trimmedEmail
     );
 
-    console.log("Registration Response:",response);
+    console.log("Registration Response:", response);
 
     setSubmitted(true);
-    
+
     console.log("onSuccess prop:", onSuccess);
 
     onSuccess({
-      
       event,
       attendee: {
-        name,
-        email,
+        name: trimmedName,
+        email: trimmedEmail,
         accessCode: response.data.accessCode,
         registrationId: response.data.registrationId,
         ticketType: response.data.ticketType,
@@ -307,11 +325,10 @@ const handleRSVP = async () => {
           <input
             type="email"
             value={email}
-            onChange={(e) => setEmail (e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="wealth@gmail.com"
             required
             style={{ width: '100%', padding: '12px', border: '1px solid #e5d6de', borderRadius: '10px', marginBottom: '12px', outline: 'none', fontFamily: 'Poppins, sans-serif', background: '#fff', color: '#222', boxSizing: 'border-box' }}
-            
           />
 
           <label style={{ display: 'block', fontSize: '12px', marginBottom: '6px', color: '#555', fontWeight: 700 }}>

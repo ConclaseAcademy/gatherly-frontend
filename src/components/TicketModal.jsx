@@ -15,22 +15,78 @@ const TicketModal = ({ isOpen, onClose, event, attendee }) => {
   const ticketCode = attendee?.accessCode;
   
   const handleDownload = () => {
-    const content = [
-      "Event Ticket",
-      `Event: ${event?.title }`,
-      `Date: ${event?.date}`,
-      `Time: ${event?.time}`,
-      `Location: ${event?.venue}`,
-      `Attendee: ${attendee?.name}`,
-      `Email: ${attendee?.email }`,
-      `Ticket Code: ${ticketCode}`,
-    ].join("\n");
+    const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ticket - ${event?.title || "Event"}</title>
+  <style>
+    body { margin: 0; padding: 0; background: #f8f2f6; font-family: Inter, system-ui, sans-serif; }
+    .ticket-wrapper { width: 100%; max-width: 860px; margin: 0 auto; padding: 20px; box-sizing: border-box; }
+    .ticket { background: #fff; border-radius: 28px; border: 1px solid #f4d7e2; box-shadow: 0 24px 76px rgba(0,0,0,0.08); overflow: hidden; }
+    .ticket-top { padding: 34px 40px 28px; background: linear-gradient(135deg, #fff1f6 0%, #ffe4ef 100%); }
+    .ticket-title { margin: 0 0 8px; font-size: 34px; font-weight: 800; color: #2f0d20; }
+    .ticket-tag { display: inline-flex; align-items: center; padding: 12px 18px; border-radius: 999px; background: #ffe5ef; color: #bf2c62; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+    .ticket-header { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; }
+    .ticket-detail-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 26px; }
+    .detail-card { padding: 18px 20px; border-radius: 22px; background: #fff; border: 1px solid #f7d8e5; }
+    .detail-card h4 { margin: 0 0 8px; font-size: 11px; color: #9e7a8f; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 800; }
+    .detail-card p { margin: 0; font-size: 16px; color: #32131f; line-height: 1.5; font-weight: 700; }
+    .ticket-body { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 24px 40px 30px; }
+    .ticket-info { border-radius: 24px; padding: 24px; background: #fff6f9; border: 1px solid #f7d8e5; }
+    .ticket-info h4 { margin: 0 0 10px; font-size: 12px; color: #9e7a8f; text-transform: uppercase; letter-spacing: 0.12em; }
+    .ticket-info p { margin: 0; font-size: 16px; color: #32131f; font-weight: 700; line-height: 1.5; }
+    .ticket-code { padding: 24px; border-radius: 24px; background: #fff0f7; border: 1px dashed #f5c2d1; font-size: 22px; font-weight: 800; letter-spacing: 0.14em; text-align: center; color: #8d2452; }
+    .ticket-footer { padding: 22px 40px 34px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 14px; background: #fffefc; }
+    .footer-text { font-size: 13px; color: #7f5d6b; }
+    @media(max-width: 780px) {
+      .ticket-header, .ticket-body, .ticket-footer { display: block; }
+      .ticket-detail-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ticket-wrapper">
+    <div class="ticket">
+      <div class="ticket-top">
+        <div class="ticket-header">
+          <div>
+            <p class="ticket-tag">Ticket</p>
+            <h1 class="ticket-title">${event?.title || "Event"}</h1>
+          </div>
+          <div class="ticket-code">${ticketCode || "N/A"}</div>
+        </div>
+        <div class="ticket-detail-grid">
+          <div class="detail-card"><h4>Date</h4><p>${event?.date || "TBD"}</p></div>
+          <div class="detail-card"><h4>Time</h4><p>${formatDisplayTime(event?.startTime) || "TBD"}</p></div>
+          <div class="detail-card"><h4>Location</h4><p>${event?.venue || "TBD"}</p></div>
+          <div class="detail-card"><h4>Attendee</h4><p>${attendee?.name || "Guest"}</p></div>
+        </div>
+      </div>
+      <div class="ticket-body">
+        <div class="ticket-info">
+          <h4>Price</h4>
+          <p>${event?.price || "Free"}</p>
+        </div>
+        <div class="ticket-info">
+          <h4>Email</h4>
+          <p>${attendee?.email || "guest@example.com"}</p>
+        </div>
+      </div>
+      <div class="ticket-footer">
+        <div class="footer-text">Please present this ticket at the event entrance.</div>
+        <div class="footer-text">Generated on ${new Date().toLocaleDateString()}</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`;
 
-    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = url;
-    link.download = `${(event?.title || "event").toLowerCase().replace(/\s+/g, "-")}-ticket.txt`;
+    link.download = `${(event?.title || 'event').toLowerCase().replace(/\s+/g, '-')}-ticket.html`;
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -321,23 +377,24 @@ const TicketModal = ({ isOpen, onClose, event, attendee }) => {
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={handleDownload}
-            style={{
-              width: "100%",
-              marginTop: "12px",
-              background: "#16a34a",
-              color: "#fff",
-              border: "none",
-              borderRadius: "8px",
-              padding: "12px",
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            ⬇ Download Ticket
-          </button>
+          <div style={{ display: 'grid', gap: '12px' }}>
+            <button
+              type="button"
+              onClick={handleDownload}
+              style={{
+                width: "100%",
+                background: "#16a34a",
+                color: "#fff",
+                border: "none",
+                borderRadius: "12px",
+                padding: "14px",
+                fontWeight: 700,
+                cursor: "pointer",
+              }}
+            >
+              ⬇ Download Ticket
+            </button>
+          </div>
         </div>
       </div>
     </div>
