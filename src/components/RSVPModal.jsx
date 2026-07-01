@@ -7,6 +7,7 @@ import { CiLocationOn } from 'react-icons/ci';
 import { FaRegUser } from "react-icons/fa6";
 import { CiMail } from "react-icons/ci";
 import { registerForEvent } from "../api/registrationApi";
+import useLoaderStore from '../store/useLoaderStore';
 
 
 function RSVPModal({ isOpen, onClose, event, onSuccess, }) {
@@ -15,6 +16,7 @@ function RSVPModal({ isOpen, onClose, event, onSuccess, }) {
   const [email, setEmail] = useState('')
    const [contact, setContact] = useState('')
   const [submitted, setSubmitted] = useState(false);
+  const { showLoader, hideLoader } = useLoaderStore();
 
   if (!isOpen) return null;
 
@@ -22,6 +24,7 @@ function RSVPModal({ isOpen, onClose, event, onSuccess, }) {
 
 
 const handleRSVP = async () => {
+  showLoader();
   try {
     const response = await registerForEvent(
       event.eventId,
@@ -52,6 +55,8 @@ const handleRSVP = async () => {
   } catch (error) {
     console.log(error.response?.data);
     alert(error.response?.data?.message || "Registration failed");
+  } finally {
+    hideLoader();
   }
 };
  

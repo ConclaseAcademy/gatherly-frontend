@@ -11,6 +11,7 @@ import TicketModal from '../components/TicketModal';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { getEvents } from '../api/Api'
+import useLoaderStore from '../store/useLoaderStore';
 
 
 const EventsPage = () => {
@@ -19,8 +20,8 @@ const EventsPage = () => {
   const [ticketOpen, setTicketOpen] = useState(false);
   const [capacity, setCapacity] = useState(null);
   const [ticketData, setTicketData] = useState(null);
+  const { showLoader, hideLoader } = useLoaderStore();
   
-
   const loadEvents = async () => {
     try {
       const data = await getEvents();
@@ -34,6 +35,7 @@ const EventsPage = () => {
      const [search, setSearch] = useState("")
     const [eventData, setEventData] = useState([]);
      useEffect(() => {
+  showLoader();
   getEvents()
     .then((response) => {
       const activeEvents = response.data.data.items.filter(
@@ -47,6 +49,9 @@ const EventsPage = () => {
         error.response?.data?.message || "Unable to load events"
       );
       console.log(error);
+    })
+    .finally(() => {
+      hideLoader();
     });
 }, []);
 

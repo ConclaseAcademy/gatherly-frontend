@@ -10,18 +10,23 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import { useEffect } from "react";
 import useAuthStore from "./store/authStore";
+import useLoaderStore from "./store/useLoaderStore";
 import Loader from "./components/Loader";
 
 
 function App() {
 
     const { loadUser, user } = useAuthStore();
+    const { showLoader, hideLoader } = useLoaderStore();
 
   useEffect(() => {
   const token = localStorage.getItem("token");
 
   if (token) {
-    loadUser();
+    showLoader();
+    loadUser().finally(() => {
+      hideLoader();
+    });
   }
 }, []);
     return (

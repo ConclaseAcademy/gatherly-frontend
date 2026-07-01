@@ -3,10 +3,12 @@ import { useLocation, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Logo from "../components/Logo";
+import useLoaderStore from "../store/useLoaderStore";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { showLoader, hideLoader } = useLoaderStore();
 
   const [email] = useState(location.state?.email || "");
   const [otp, setOtp] = useState("");
@@ -22,6 +24,7 @@ const ResetPassword = () => {
     }
 
     try {
+      showLoader();
       await axios.post(
         "http://20.25.50.191:5144/api/Auth/reset-password",
         {
@@ -37,6 +40,8 @@ const ResetPassword = () => {
       navigate("/login");
     } catch (error) {
       toast.error("Failed to reset password.");
+    } finally {
+      hideLoader();
     }
   };
 

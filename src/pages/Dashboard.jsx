@@ -14,6 +14,7 @@ import { getMyEvents, deleteEvent } from '../api/Api';
 import { toast } from 'react-toastify';
 import useEventStore from '../store/eventStore';
 import useAuthStore from "../store/authStore";
+import useLoaderStore from "../store/useLoaderStore";
 
 
 
@@ -33,10 +34,11 @@ const Dashboard = () => {
     const [checkInEvent, setCheckInEvent] = useState(null);
     const [showshareEventModal, setShowShareEventModal] = useState(false)
     const [shareEvent, setShareEvent] = useState(null)
-   const [ticketOpen, setTicketOpen] = useState(false);
+    const [ticketOpen, setTicketOpen] = useState(false);
     const [ticketEvent, setTicketEvent] = useState(null);
     const [attendee, setAttendee] = useState(null);
-   const role= localStorage.getItem("role")
+    const role= localStorage.getItem("role")
+    const { showLoader, hideLoader } = useLoaderStore();
 
 
      const { user } = useAuthStore();
@@ -44,7 +46,10 @@ const Dashboard = () => {
     const { events, loadEvents, deleteEventFromStore, publishEventInStore, closeEventInStore, } = useEventStore();
 
     useEffect(() => {
-  loadEvents();
+  showLoader();
+  loadEvents().finally(() => {
+    hideLoader();
+  });
 }, []);
 
      const handleDeleteEvent = async (eventId) => {

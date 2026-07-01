@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import Logo from "../components/Logo";
-
+import Logo from "../components/Logo";import useLoaderStore from "../store/useLoaderStore";
 const ForgotPassword = () => {
   const navigate = useNavigate();
+  const { showLoader, hideLoader } = useLoaderStore();
 
   const [email, setEmail] = useState("");
 
@@ -13,6 +13,7 @@ const ForgotPassword = () => {
     e.preventDefault();
 
     try {
+      showLoader();
       await axios.post(
         "http://20.25.50.191:5144/api/Auth/forgot-password",
         {
@@ -27,6 +28,8 @@ const ForgotPassword = () => {
       });
     } catch (error) {
       toast.error("Failed to send OTP.");
+    } finally {
+      hideLoader();
     }
   };
 

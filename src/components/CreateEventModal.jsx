@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { createEvent, updateEvent } from '../api/Api'
 import { toast } from 'react-toastify';
 import useAuthStore from "../store/authStore";
+import useLoaderStore from '../store/useLoaderStore';
 
 const inputStyle = {
   width: '100%',
@@ -31,6 +32,7 @@ const rowStyle = {
 
 function CreateEventModal({ isOpen, onClose, eventToEdit, onSubmit }) {
   const { user } = useAuthStore();
+  const { showLoader, hideLoader } = useLoaderStore();
   const [title, setTitle] = useState('graduation')
   const [description, setDescription] = useState('conclase graduation')
   const [datetime, setDatetime] = useState('12/21/2026')
@@ -98,6 +100,7 @@ const payload = {
     : "",
 };
 try {
+  showLoader();
   if (eventToEdit) {
     await updateEvent(eventToEdit.eventId, payload);
     toast.success("Event updated successfully");
@@ -113,6 +116,8 @@ try {
   onClose();
 } catch (error) {
   toast.error(error.response?.data?.message || "Something went wrong");
+} finally {
+  hideLoader();
 }
  }
 
