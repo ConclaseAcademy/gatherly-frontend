@@ -828,16 +828,33 @@ font-size: 16px;
 @media (max-width: 768px) {
   .navbar-two {
     padding: 16px 24px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .logo-wrap {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .nav-links {
     width: 100%;
-    justify-content: space-between;
+    justify-content: center;
     order: 3;
+    gap: 10px;
   }
 
-  .create-btn {
-    margin-left: auto;
+  .nav-link,
+  .logout-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .organizer-create-btn {
+    width: 100%;
+    order: 2;
+    margin-top: 8px;
   }
 
   .navbar {
@@ -950,18 +967,7 @@ font-size: 16px;
    MOBILE  ≤ 480px
    ============================== */
 @media (max-width: 480px) {
-  /* .navbar {
-    padding: 14px 16px;
-  }
 
-  .nav-btns {
-    width: 100%;
-    justify-content: flex-end;
-  }
-
-  .organizer {
-    display: none;
-  } */
 
    .navbar {
     padding: 14px 16px;
